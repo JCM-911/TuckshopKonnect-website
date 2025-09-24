@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Dashboard - TuckshopKonnect</title>
+    
+    <!-- External CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #1f2937;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            color: white !important;
+            font-size: 1.8rem;
+            text-decoration: none;
+        }
+
+        .navbar-brand:hover {
+            transform: scale(1.05);
+            transition: all 0.3s ease;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            margin: 0 0.5rem;
+            padding: 0.75rem 1.25rem !important;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white !important;
+            transform: translateY(-2px);
+        }
+
+        /* Content */
+        .content-container {
+            padding: 2rem 0;
+        }
+
+        .welcome-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .welcome-title {
+            color: white;
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .welcome-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .parent-info {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: inline-block;
+        }
+
+        .parent-name {
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .parent-id {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Children Grid */
+        .children-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .child-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .child-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .child-card-body {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .student-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+        }
+
+        .student-name {
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .student-details {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1.5rem;
+        }
+
+        .student-class {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .student-id {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .wallet-info {
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .balance-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .balance-amount {
+            color: white;
+            font-size: 2.2rem;
+            font-weight: 800;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .access-btn {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .access-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+            color: white;
+        }
+
+        .low-balance {
+            border: 2px solid rgba(239, 68, 68, 0.5);
+        }
+
+        .low-balance .wallet-info {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .low-balance-indicator {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(239, 68, 68, 0.9);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .logout-section {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.5);
+            color: #fecaca;
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stagger-animation {
+            animation: staggerIn 0.6s ease-out forwards;
+        }
+
+        @keyframes staggerIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .welcome-title {
+                font-size: 2rem;
+            }
+            
+            .children-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .child-card-body {
+                padding: 1.5rem;
+            }
+            
+            .student-avatar {
+                width: 70px;
+                height: 70px;
+                font-size: 1.8rem;
+            }
+            
+            .balance-amount {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* WhatsApp Float */
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25d366;
+            color: #fff;
+            border-radius: 50%;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.3s ease;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            background-color: #20b358;
+        }
+
+        .whatsapp-icon {
+            font-size: 28px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg">
+                <a class="navbar-brand" href="/">
+                    <i class="fas fa-store me-2"></i>TuckshopKonnect
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <button class="nav-link btn btn-link" onclick="confirmLogout()">
+                                <i class="fas fa-sign-out-alt me-1"></i>Logout
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content-container">
+        <div class="container">
+            <!-- Welcome Section -->
+            <div class="welcome-section fade-in">
+                <h1 class="welcome-title">Welcome Back!</h1>
+                <p class="welcome-subtitle">Select a child to manage their tuckshop account</p>
+                <div class="parent-info">
+                    <div class="parent-name" id="parentName">Loading...</div>
+                    <div class="parent-id" id="parentId">Parent ID: ...</div>
+                </div>
+            </div>
+
+            <!-- Children Grid -->
+            <div class="children-grid" id="childrenGrid">
+                <!-- Children cards will be populated here -->
+            </div>
+
+            <!-- Logout Section -->
+            <div class="logout-section">
+                <button class="logout-btn" onclick="confirmLogout()">
+                    <i class="fas fa-sign-out-alt me-2"></i>
+                    Logout from TuckshopKonnect
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- WhatsApp Float -->
+    <a href="https://wa.me/2349025884232" 
+       class="whatsapp-float" 
+       target="_blank" 
+       rel="noopener" 
+       aria-label="Chat on WhatsApp">
+        <i class="fab fa-whatsapp whatsapp-icon"></i>
+    </a>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        let currentParent = null;
+        let sessionTimeout;
+        const SESSION_DURATION = 30 * 60 * 1000; // 30 minutes
+
+        function startSession() {
+            clearTimeout(sessionTimeout);
+            sessionTimeout = setTimeout(() => {
+                alert('Your session has expired. Please login again.');
+                logout();
+            }, SESSION_DURATION);
+        }
+
+        function resetSessionTimer() {
+            startSession();
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+
+        function loadParentData() {
+            const parentData = sessionStorage.getItem('currentParent');
+            
+            if (!parentData) {
+                alert('Session expired. Please login again.');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            try {
+                currentParent = JSON.parse(parentData);
+                updateUI();
+            } catch (error) {
+                console.error('Error loading parent data:', error);
+                logout();
+            }
+        }
+
+        function updateUI() {
+            if (!currentParent) return;
+            
+            // Update parent info
+            document.getElementById('parentName').textContent = currentParent.name;
+            document.getElementById('parentId').textContent = `Parent ID: ${currentParent.parentId}`;
+            
+            // Create children cards
+            createChildrenCards();
+        }
+
+        function createChildrenCards() {
+            const grid = document.getElementById('childrenGrid');
+            grid.innerHTML = '';
+            
+            currentParent.students.forEach((student, index) => {
+                const cardDiv = document.createElement('div');
+                cardDiv.className = `child-card ${student.balance < 1000 ? 'low-balance' : ''}`;
+                cardDiv.style.animationDelay = `${index * 0.1}s`;
+                cardDiv.classList.add('stagger-animation');
+                
+                cardDiv.innerHTML = `
+                    ${student.balance < 1000 ? '<div class="low-balance-indicator"><i class="fas fa-exclamation-triangle me-1"></i>Low Balance</div>' : ''}
+                    <div class="child-card-body">
+                        <div class="student-avatar">${student.name.charAt(0).toUpperCase()}</div>
+                        <h3 class="student-name">${student.name}</h3>
+                        <div class="student-details">
+                            <div class="student-class">${student.class}</div>
+                            <div class="student-id">Student ID: ${student.id}</div>
+                        </div>
+                        <div class="wallet-info">
+                            <div class="balance-label">Available Balance</div>
+                            <div class="balance-amount">₦${student.balance.toLocaleString()}</div>
+                        </div>
+                        <button class="access-btn" onclick="accessChildWallet('${student.id}')">
+                            <i class="fas fa-wallet me-2"></i>
+                            Access ${student.name.split(' ')[0]}'s Wallet
+                        </button>
+                    </div>
+                `;
+                
+                grid.appendChild(cardDiv);
+            });
+        }
+
+        function accessChildWallet(studentId) {
+            const selectedStudent = currentParent.students.find(s => s.id === studentId);
+            
+            if (!selectedStudent) {
+                alert('Student not found. Please try again.');
+                return;
+            }
+            
+            // Store selected student data
+            sessionStorage.setItem('currentStudent', JSON.stringify(selectedStudent));
+            
+            // Navigate to wallet page
+            window.location.href = 'wallet.html';
+        }
+
+        function confirmLogout() {
+            if (confirm('Are you sure you want to logout from TuckshopKonnect?')) {
+                logout();
+            }
+        }
+
+        // Activity tracking for session management
+        function trackActivity() {
+            ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+                document.addEventListener(event, resetSessionTimer, true);
+            });
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadParentData();
+            startSession();
+            trackActivity();
+        });
+    </script>
+</body>
+</html>

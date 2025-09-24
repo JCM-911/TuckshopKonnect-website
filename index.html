@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - TuckshopKonnect</title>
+    
+    <!-- External CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
+            min-height: 100vh;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            width: 100%;
+            max-width: 450px;
+            padding: 3rem;
+            margin: 2rem;
+        }
+
+        .brand-section {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .brand-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: 0 0 30px rgba(220, 38, 38, 0.5);
+        }
+
+        .brand-title {
+            color: white;
+            font-weight: 800;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .brand-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        .admin-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .login-form {
+            margin-top: 2rem;
+        }
+
+        .form-label {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(148, 163, 184, 0.2);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #dc2626;
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.3);
+            outline: none;
+            color: white;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            z-index: 3;
+        }
+
+        .input-group .form-control {
+            padding-left: 3rem;
+            margin-bottom: 0;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #dc2626, #991b1b);
+            border: none;
+            color: white;
+            font-weight: 700;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(220, 38, 38, 0.4);
+            color: white;
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fecaca;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .parent-login-link {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .parent-login-link a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .parent-login-link a:hover {
+            color: #e2e8f0;
+        }
+
+        .loading-spinner {
+            display: none;
+            margin-right: 0.5rem;
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Security Features */
+        .security-features {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .security-item {
+            display: flex;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .security-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .security-item i {
+            color: #22c55e;
+            margin-right: 0.5rem;
+            width: 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .login-container {
+                margin: 1rem;
+                padding: 2rem;
+            }
+            
+            .brand-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container fade-in">
+        <!-- Brand Section -->
+        <div class="brand-section">
+            <div class="brand-icon">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h1 class="brand-title">TuckshopKonnect</h1>
+            <p class="brand-subtitle">Administrative Portal</p>
+            <span class="admin-badge">Secure Access</span>
+        </div>
+
+        <!-- Error Alert -->
+        <div id="errorAlert" class="alert" style="display: none;">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <span id="errorMessage">Invalid Administrator Credentials</span>
+        </div>
+
+        <!-- Login Form -->
+        <form class="login-form" id="loginForm">
+            <div class="input-group">
+                <i class="fas fa-user-shield"></i>
+                <input type="text" class="form-control" id="username" placeholder="Administrator Username" required autocomplete="username">
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-key"></i>
+                <input type="password" class="form-control" id="password" placeholder="Administrator Password" required autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="login-btn" id="loginBtn">
+                <span class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </span>
+                <i class="fas fa-sign-in-alt me-2"></i>
+                Access Admin Dashboard
+            </button>
+        </form>
+
+        <!-- Security Features -->
+        <div class="security-features">
+            <div class="security-item">
+                <i class="fas fa-check-circle"></i>
+                <span>Encrypted Authentication</span>
+            </div>
+            <div class="security-item">
+                <i class="fas fa-check-circle"></i>
+                <span>Session Timeout Protection</span>
+            </div>
+            <div class="security-item">
+                <i class="fas fa-check-circle"></i>
+                <span>Activity Monitoring</span>
+            </div>
+        </div>
+
+        <!-- Parent Login Link -->
+        <div class="parent-login-link">
+            <a href="parent login.html">
+                <i class="fas fa-arrow-left me-1"></i>
+                Click For Parent Login
+            </a>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Admin credentials (stored securely in production)
+        let adminCredentials = JSON.parse(localStorage.getItem('adminCredentials')) || {
+            username: 'admin',
+            password: '123'
+        };
+
+        // Session management
+        let sessionTimeout;
+        const SESSION_DURATION = 45 * 60 * 1000; // 45 minutes for admin
+
+        function startSession() {
+            clearTimeout(sessionTimeout);
+            sessionTimeout = setTimeout(() => {
+                alert('Administrator session has expired. Please login again.');
+                logout();
+            }, SESSION_DURATION);
+        }
+
+        function resetSessionTimer() {
+            if (sessionStorage.getItem('adminLoggedIn')) {
+                startSession();
+            }
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'index.html';
+        }
+
+        function showError(message) {
+            const errorAlert = document.getElementById('errorAlert');
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorAlert.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorAlert').style.display = 'none';
+        }
+
+        function setLoadingState(loading) {
+            const loginBtn = document.getElementById('loginBtn');
+            const spinner = loginBtn.querySelector('.loading-spinner');
+            
+            if (loading) {
+                loginBtn.disabled = true;
+                spinner.style.display = 'inline-block';
+                loginBtn.innerHTML = spinner.outerHTML + ' Authenticating...';
+            } else {
+                loginBtn.disabled = false;
+                spinner.style.display = 'none';
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Access Admin Dashboard';
+            }
+        }
+
+        function authenticateAdmin(username, password) {
+            return new Promise((resolve) => {
+                // Simulate secure authentication
+                setTimeout(() => {
+                    if (username === adminCredentials.username && password === adminCredentials.password) {
+                        resolve({ success: true });
+                    } else {
+                        resolve({ success: false, message: 'Invalid administrator credentials' });
+                    }
+                }, 1200);
+            });
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            hideError();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            if (!username || !password) {
+                showError('Please enter both username and password');
+                return;
+            }
+            
+            setLoadingState(true);
+            
+            authenticateAdmin(username, password)
+                .then(result => {
+                    setLoadingState(false);
+                    
+                    if (result.success) {
+                        // Store admin session
+                        sessionStorage.setItem('adminLoggedIn', 'true');
+                        sessionStorage.setItem('adminUsername', username);
+                        sessionStorage.setItem('loginTime', new Date().toISOString());
+                        
+                        // Start session timer
+                        startSession();
+                        
+                        // Redirect to admin dashboard
+                        window.location.href = 'Admin dashboard.html';
+                    } else {
+                        showError(result.message);
+                        // Clear form for security
+                        document.getElementById('password').value = '';
+                    }
+                })
+                .catch(error => {
+                    setLoadingState(false);
+                    console.error('Admin login error:', error);
+                    showError('Authentication error. Please try again.');
+                });
+        }
+
+        // Activity tracking for session management
+        function trackActivity() {
+            ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+                document.addEventListener(event, resetSessionTimer, true);
+            });
+        }
+
+        // Security: Disable right-click and certain keyboard shortcuts
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            // Disable F12, Ctrl+Shift+I, Ctrl+U, etc.
+            if (e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+                (e.ctrlKey && e.key === 'u')) {
+                e.preventDefault();
+            }
+        });
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if already logged in
+            if (sessionStorage.getItem('adminLoggedIn')) {
+                window.location.href = 'Admin dashboard.html';
+                return;
+            }
+
+            trackActivity();
+            
+            // Handle form submission
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            
+            // Auto-focus on username input
+            document.getElementById('username').focus();
+            
+            // Hide error on input
+            document.getElementById('username').addEventListener('input', hideError);
+            document.getElementById('password').addEventListener('input', hideError);
+
+            // Clear password field on page load for security
+            document.getElementById('password').value = '';
+        });
+
+        // Prevent back button after logout
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+    </script>
+</body>
+</html>

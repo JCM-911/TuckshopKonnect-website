@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Login - TuckshopKonnect</title>
+    
+    <!-- External CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            width: 100%;
+            max-width: 450px;
+            padding: 3rem;
+            margin: 2rem;
+        }
+
+        .brand-section {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .brand-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+        }
+
+        .brand-title {
+            color: white;
+            font-weight: 800;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .brand-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        .login-form {
+            margin-top: 2rem;
+        }
+
+        .form-label {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #6366f1;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+            outline: none;
+            color: white;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            z-index: 3;
+        }
+
+        .input-group .form-control {
+            padding-left: 3rem;
+            margin-bottom: 0;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border: none;
+            color: white;
+            font-weight: 700;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+            color: white;
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fecaca;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .demo-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .demo-title {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .demo-accounts {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .demo-account {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .demo-account:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(3px);
+        }
+
+        .demo-account-info {
+            flex: 1;
+        }
+
+        .demo-parent-name {
+            color: white;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .demo-parent-id {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+        }
+
+        .demo-children {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            text-align: right;
+        }
+
+        .loading-spinner {
+            display: none;
+            margin-right: 0.5rem;
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .login-container {
+                margin: 1rem;
+                padding: 2rem;
+            }
+            
+            .brand-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container fade-in">
+        <!-- Brand Section -->
+        <div class="brand-section">
+            <div class="brand-icon">
+                <i class="fas fa-store"></i>
+            </div>
+            <h1 class="brand-title">TuckshopKonnect</h1>
+            <p class="brand-subtitle">Parent Login Portal</p>
+        </div>
+
+        <!-- Error Alert -->
+        <div id="errorAlert" class="alert" style="display: none;">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span id="errorMessage">Invalid Parent ID or Password</span>
+        </div>
+
+        <!-- Login Form -->
+        <form class="login-form" id="loginForm">
+            <div class="input-group">
+                <i class="fas fa-id-card"></i>
+                <input type="text" class="form-control" id="parentId" placeholder="Enter Parent ID (e.g., PAR001)" required>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" class="form-control" id="password" placeholder="Enter Password" required>
+            </div>
+
+            <button type="submit" class="login-btn" id="loginBtn">
+                <span class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </span>
+                <i class="fas fa-sign-in-alt me-2"></i>
+                Login to Dashboard
+            </button>
+        </form>
+
+        <!-- Demo Accounts Section -->
+        <div class="demo-section">
+            <p class="demo-title">Demo Accounts (Click to use)</p>
+            <div class="demo-accounts" id="demoAccounts">
+                <!-- Demo accounts will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Demo parent accounts data
+        const demoParents = [
+            // Parents with 1 child
+            { parentId: 'PAR001', password: 'pass123', name: 'Adebayo Olumide', children: ['Kemi Adebayo'] },
+            { parentId: 'PAR002', password: 'pass123', name: 'Chioma Okafor', children: ['Emeka Okafor'] },
+            { parentId: 'PAR003', password: 'pass123', name: 'Ibrahim Musa', children: ['Fatima Ibrahim'] },
+            { parentId: 'PAR004', password: 'pass123', name: 'Grace Okoro', children: ['David Okoro'] },
+            { parentId: 'PAR005', password: 'pass123', name: 'Segun Adeyemi', children: ['Tolu Adeyemi'] },
+            { parentId: 'PAR006', password: 'pass123', name: 'Blessing Ezeh', children: ['Chinedu Ezeh'] },
+            { parentId: 'PAR007', password: 'pass123', name: 'Yakubu Aliyu', children: ['Amina Yakubu'] },
+            { parentId: 'PAR008', password: 'pass123', name: 'Funmi Ajayi', children: ['Folake Ajayi'] },
+            { parentId: 'PAR009', password: 'pass123', name: 'Chidi Nnadi', children: ['Kelechi Nnadi'] },
+            { parentId: 'PAR010', password: 'pass123', name: 'Amaka Obi', children: ['Nkem Obi'] },
+
+            // Parents with 2 children
+            { parentId: 'PAR011', password: 'pass123', name: 'Taiwo Balogun', children: ['Kehinde Balogun', 'Taiye Balogun'] },
+            { parentId: 'PAR012', password: 'pass123', name: 'Ngozi Okonkwo', children: ['Chuka Okonkwo', 'Ada Okonkwo'] },
+            { parentId: 'PAR013', password: 'pass123', name: 'Musa Garba', children: ['Hadiza Musa', 'Yusuf Musa'] },
+            { parentId: 'PAR014', password: 'pass123', name: 'Kemi Adewale', children: ['Tope Adewale', 'Bisi Adewale'] },
+            { parentId: 'PAR015', password: 'pass123', name: 'Emeka Nwosu', children: ['Chioma Nwosu', 'Ikenna Nwosu'] },
+            { parentId: 'PAR016', password: 'pass123', name: 'Hauwa Abdullahi', children: ['Aisha Hauwa', 'Umar Hauwa'] },
+            { parentId: 'PAR017', password: 'pass123', name: 'Tunde Ogundipe', children: ['Yemi Ogundipe', 'Sola Ogundipe'] },
+            { parentId: 'PAR018', password: 'pass123', name: 'Joy Okechukwu', children: ['Prince Okechukwu', 'Princess Okechukwu'] },
+            { parentId: 'PAR019', password: 'pass123', name: 'Aliyu Tanko', children: ['Maryam Aliyu', 'Ahmed Aliyu'] },
+            { parentId: 'PAR020', password: 'pass123', name: 'Ife Akinyemi', children: ['Damilola Akinyemi', 'Temilola Akinyemi'] },
+            { parentId: 'PAR021', password: 'pass123', name: 'Chinonso Okwu', children: ['Chidera Okwu', 'Chidimma Okwu'] },
+            { parentId: 'PAR022', password: 'pass123', name: 'Abubakar Sani', children: ['Zainab Abubakar', 'Ibrahim Abubakar'] },
+            { parentId: 'PAR023', password: 'pass123', name: 'Shade Adebayo', children: ['Tosin Adebayo', 'Doyin Adebayo'] },
+            { parentId: 'PAR024', password: 'pass123', name: 'Nkem Eze', children: ['Uchenna Eze', 'Adanna Eze'] },
+            { parentId: 'PAR025', password: 'pass123', name: 'Rashid Bello', children: ['Safiya Rashid', 'Mubarak Rashid'] },
+
+            // Parents with 3+ children
+            { parentId: 'PAR026', password: 'pass123', name: 'Biodun Adeoye', children: ['Tobi Adeoye', 'Femi Adeoye', 'Kemi Adeoye'] },
+            { parentId: 'PAR027', password: 'pass123', name: 'Comfort Udoh', children: ['Emmanuel Udoh', 'Grace Udoh', 'Faith Udoh'] },
+            { parentId: 'PAR028', password: 'pass123', name: 'Salisu Ahmad', children: ['Fatima Salisu', 'Usman Salisu', 'Halima Salisu', 'Aliyu Salisu'] },
+            { parentId: 'PAR029', password: 'pass123', name: 'Adunni Bakare', children: ['Bukola Bakare', 'Ronke Bakare', 'Wale Bakare'] },
+            { parentId: 'PAR030', password: 'pass123', name: 'Ifeanyi Okafor', children: ['Chineye Okafor', 'Chukwuma Okafor', 'Chiamaka Okafor', 'Chidubem Okafor'] }
+        ];
+
+        // Student data mapped to parents
+        const studentData = {
+            // Single child families
+            'Kemi Adebayo': { id: 'STU001', class: 'JSS2A', balance: 0 },
+            'Emeka Okafor': { id: 'STU002', class: 'SS1B', balance: 0 },
+            'Fatima Ibrahim': { id: 'STU003', class: 'JSS1C', balance: 0 },
+            'David Okoro': { id: 'STU004', class: 'SS2A', balance: 0 },
+            'Tolu Adeyemi': { id: 'STU005', class: 'JSS3B', balance: 0 },
+            'Chinedu Ezeh': { id: 'STU006', class: 'SS1A', balance: 0 },
+            'Amina Yakubu': { id: 'STU007', class: 'JSS2C', balance: 0 },
+            'Folake Ajayi': { id: 'STU008', class: 'SS3A', balance: 0 },
+            'Kelechi Nnadi': { id: 'STU009', class: 'JSS1A', balance: 0 },
+            'Nkem Obi': { id: 'STU010', class: 'SS2B', balance: 0 },
+
+            // Two children families
+            'Kehinde Balogun': { id: 'STU011', class: 'JSS3A', balance: 0 },
+            'Taiye Balogun': { id: 'STU012', class: 'JSS1B', balance: 0 },
+            'Chuka Okonkwo': { id: 'STU013', class: 'SS2A', balance: 0 },
+            'Ada Okonkwo': { id: 'STU014', class: 'JSS2B', balance: 0 },
+            'Hadiza Musa': { id: 'STU015', class: 'SS1C', balance: 0 },
+            'Yusuf Musa': { id: 'STU016', class: 'JSS3C', balance: 0 },
+            'Tope Adewale': { id: 'STU017', class: 'SS3B', balance: 0 },
+            'Bisi Adewale': { id: 'STU018', class: 'JSS1A', balance: 0 },
+            'Chioma Nwosu': { id: 'STU019', class: 'SS2C', balance: 0 },
+            'Ikenna Nwosu': { id: 'STU020', class: 'JSS2A', balance: 0 },
+            'Aisha Hauwa': { id: 'STU021', class: 'SS1A', balance: 0 },
+            'Umar Hauwa': { id: 'STU022', class: 'JSS3A', balance: 0 },
+            'Yemi Ogundipe': { id: 'STU023', class: 'SS3A', balance: 0 },
+            'Sola Ogundipe': { id: 'STU024', class: 'JSS1C', balance: 0 },
+            'Prince Okechukwu': { id: 'STU025', class: 'SS2A', balance: 0 },
+            'Princess Okechukwu': { id: 'STU026', class: 'JSS2B', balance: 0 },
+            'Maryam Aliyu': { id: 'STU027', class: 'SS1B', balance: 0 },
+            'Ahmed Aliyu': { id: 'STU028', class: 'JSS3B', balance: 0 },
+            'Damilola Akinyemi': { id: 'STU029', class: 'SS3C', balance: 0 },
+            'Temilola Akinyemi': { id: 'STU030', class: 'JSS1A', balance: 0 },
+            'Chidera Okwu': { id: 'STU031', class: 'SS2B', balance: 0 },
+            'Chidimma Okwu': { id: 'STU032', class: 'JSS2C', balance: 0 },
+            'Zainab Abubakar': { id: 'STU033', class: 'SS1C', balance: 0 },
+            'Ibrahim Abubakar': { id: 'STU034', class: 'JSS3A', balance: 0 },
+            'Tosin Adebayo': { id: 'STU035', class: 'SS3A', balance: 0 },
+            'Doyin Adebayo': { id: 'STU036', class: 'JSS1B', balance: 0 },
+            'Uchenna Eze': { id: 'STU037', class: 'SS2A', balance: 0 },
+            'Adanna Eze': { id: 'STU038', class: 'JSS2A', balance: 0 },
+            'Safiya Rashid': { id: 'STU039', class: 'SS1A', balance: 0 },
+            'Mubarak Rashid': { id: 'STU040', class: 'JSS3C', balance: 0 },
+
+            // Three+ children families
+            'Tobi Adeoye': { id: 'STU041', class: 'SS3B', balance: 0 },
+            'Femi Adeoye': { id: 'STU042', class: 'SS1B', balance: 0 },
+            'Kemi Adeoye': { id: 'STU043', class: 'JSS2A', balance: 0 },
+            'Emmanuel Udoh': { id: 'STU044', class: 'SS2C', balance: 0 },
+            'Grace Udoh': { id: 'STU045', class: 'JSS3B', balance: 0 },
+            'Faith Udoh': { id: 'STU046', class: 'JSS1C', balance: 0 },
+            'Fatima Salisu': { id: 'STU047', class: 'SS3A', balance: 0 },
+            'Usman Salisu': { id: 'STU048', class: 'SS1A', balance: 0 },
+            'Halima Salisu': { id: 'STU049', class: 'JSS2B', balance: 0 },
+            'Aliyu Salisu': { id: 'STU050', class: 'JSS1A', balance: 0 },
+            'Bukola Bakare': { id: 'STU051', class: 'SS2A', balance: 0 },
+            'Ronke Bakare': { id: 'STU052', class: 'JSS3C', balance: 0 },
+            'Wale Bakare': { id: 'STU053', class: 'JSS1B', balance: 0 },
+            'Chineye Okafor': { id: 'STU054', class: 'SS3C', balance: 0 },
+            'Chukwuma Okafor': { id: 'STU055', class: 'SS1C', balance: 0 },
+            'Chiamaka Okafor': { id: 'STU056', class: 'JSS2C', balance: 0 },
+            'Chidubem Okafor': { id: 'STU057', class: 'JSS1A', balance: 0 }
+        };
+
+        // Session management
+        let sessionTimeout;
+        const SESSION_DURATION = 30 * 60 * 1000; // 30 minutes
+
+        function startSession() {
+            clearTimeout(sessionTimeout);
+            sessionTimeout = setTimeout(() => {
+                alert('Your session has expired. Please login again.');
+                logout();
+            }, SESSION_DURATION);
+        }
+
+        function resetSessionTimer() {
+            startSession();
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+
+        // Populate demo accounts
+        function populateDemoAccounts() {
+            const container = document.getElementById('demoAccounts');
+            container.innerHTML = '';
+
+            demoParents.forEach(parent => {
+                const accountDiv = document.createElement('div');
+                accountDiv.className = 'demo-account';
+                accountDiv.onclick = () => useDemoAccount(parent.parentId, parent.password);
+
+                accountDiv.innerHTML = `
+                    <div class="demo-account-info">
+                        <div class="demo-parent-name">${parent.name}</div>
+                        <div class="demo-parent-id">${parent.parentId}</div>
+                    </div>
+                    <div class="demo-children">
+                        ${parent.children.length} child${parent.children.length > 1 ? 'ren' : ''}
+                    </div>
+                `;
+
+                container.appendChild(accountDiv);
+            });
+        }
+
+        function useDemoAccount(parentId, password) {
+            document.getElementById('parentId').value = parentId;
+            document.getElementById('password').value = password;
+        }
+
+        function showError(message) {
+            const errorAlert = document.getElementById('errorAlert');
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorAlert.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorAlert').style.display = 'none';
+        }
+
+        function setLoadingState(loading) {
+            const loginBtn = document.getElementById('loginBtn');
+            const spinner = loginBtn.querySelector('.loading-spinner');
+            
+            if (loading) {
+                loginBtn.disabled = true;
+                spinner.style.display = 'inline-block';
+                loginBtn.innerHTML = spinner.outerHTML + ' Authenticating...';
+            } else {
+                loginBtn.disabled = false;
+                spinner.style.display = 'none';
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Login to Dashboard';
+            }
+        }
+
+        function authenticateParent(parentId, password) {
+            return new Promise((resolve) => {
+                // Simulate API call delay
+                setTimeout(() => {
+                    const parent = demoParents.find(p => p.parentId === parentId && p.password === password);
+                    if (parent) {
+                        // Add student data to parent object
+                        const parentWithStudents = {
+                            ...parent,
+                            students: parent.children.map(childName => ({
+                                name: childName,
+                                ...studentData[childName]
+                            }))
+                        };
+                        resolve({ success: true, parent: parentWithStudents });
+                    } else {
+                        resolve({ success: false, message: 'Invalid Parent ID or Password' });
+                    }
+                }, 1500);
+            });
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            hideError();
+            
+            const parentId = document.getElementById('parentId').value.trim().toUpperCase();
+            const password = document.getElementById('password').value.trim();
+            
+            if (!parentId || !password) {
+                showError('Please enter both Parent ID and Password');
+                return;
+            }
+            
+            setLoadingState(true);
+            
+            authenticateParent(parentId, password)
+                .then(result => {
+                    setLoadingState(false);
+                    
+                    if (result.success) {
+                        // Store parent data
+                        sessionStorage.setItem('currentParent', JSON.stringify(result.parent));
+                        
+                        // Start session timer
+                        startSession();
+                        
+                        // Redirect based on number of children
+                        if (result.parent.students.length === 1) {
+                            // Single child - go directly to wallet
+                            sessionStorage.setItem('currentStudent', JSON.stringify(result.parent.students[0]));
+                            window.location.href = 'wallet.html';
+                        } else {
+                            // Multiple children - go to selection dashboard
+                            window.location.href = 'dashboard.html';
+                        }
+                    } else {
+                        showError(result.message);
+                    }
+                })
+                .catch(error => {
+                    setLoadingState(false);
+                    console.error('Login error:', error);
+                    showError('An error occurred. Please try again.');
+                });
+        }
+
+        // Activity tracking for session management
+        function trackActivity() {
+            ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+                document.addEventListener(event, resetSessionTimer, true);
+            });
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            populateDemoAccounts();
+            trackActivity();
+            
+            // Handle form submission
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            
+            // Auto-focus on Parent ID input
+            document.getElementById('parentId').focus();
+            
+            // Hide error on input
+            document.getElementById('parentId').addEventListener('input', hideError);
+            document.getElementById('password').addEventListener('input', hideError);
+        });
+    </script>
+</body>
+</html>
+
+
+
+
