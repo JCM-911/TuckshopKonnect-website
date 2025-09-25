@@ -226,49 +226,88 @@ body {
 }
 
 /* Student Login Portal at Bottom */
-.parent-login-link {
+.parent-login-link.fab {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(15px);
-    padding: 15px 20px;
-    text-align: center;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    bottom: 30px;
+    right: 30px;
+    background: none;
+    border: none;
+    padding: 0;
     z-index: 1000;
     margin: 0;
 }
 
-.parent-login-link a {
-    display: inline-flex;
+.parent-login-link.fab a {
+    display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    color: rgba(255, 255, 255, 0.9);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.9rem;
-    padding: 10px 18px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-}
-
-.parent-login-link a:hover {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none;
+    border-radius: 50%;
     color: white;
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.3);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.2rem;
+    box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
 }
 
-.parent-login-link a i {
-    font-size: 0.9rem;
+.parent-login-link.fab a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
+.parent-login-link.fab a:hover {
+    transform: scale(1.1) translateY(-5px);
+    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.6);
+}
+
+.parent-login-link.fab a:hover::before {
+    opacity: 1;
+}
+
+.parent-login-link.fab a:active {
+    transform: scale(0.95);
+}
+
+/* Tooltip for FAB */
+.parent-login-link.fab a::after {
+    content: 'Student Login';
+    position: absolute;
+    right: 70px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.parent-login-link.fab a:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(-50%) translateX(-5px);
+}
 /* Animations */
 .fade-in {
     animation: fadeIn 0.8s ease-out;
@@ -653,6 +692,7 @@ body {
     </script>
 </body>
 </html>
+
 
 
 
