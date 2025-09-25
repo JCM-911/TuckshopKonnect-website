@@ -12,231 +12,232 @@
 </head>
 <body>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+       * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #1f2937;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #1f2937;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 70px;
+}
 
-        .login-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
-            width: 100%;
-            max-width: 450px;
-            padding: 3rem;
-            margin: 2rem;
-        }
+.login-container {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    max-width: 450px;
+    padding: 3rem;
+    margin: 2rem;
+}
 
-        .brand-section {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-
-        .brand-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            font-size: 2.5rem;
-            color: white;
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
-        }
-
-        .brand-title {
-            color: white;
-            font-weight: 800;
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .brand-subtitle {
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 500;
-        }
-
-        .login-form {
-            margin-top: 2rem;
-        }
-
-        .form-label {
-            color: white;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-        }
-
-        .form-control {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            padding: 1rem 1.25rem;
-            color: white;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-control:focus {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: #6366f1;
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
-            outline: none;
-            color: white;
-        }
-
-        .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .input-group {
-            position: relative;
-            margin-bottom: 1.5rem;
-        }
-
-        .input-group i {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: rgba(255, 255, 255, 0.7);
-            z-index: 3;
-        }
-
-        .input-group .form-control {
-            padding-left: 3rem;
-            margin-bottom: 0;
-        }
-
-        .login-btn {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            border: none;
-            color: white;
-            font-weight: 700;
-            padding: 1rem 2rem;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            width: 100%;
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
-        }
-
-        .login-btn:hover {
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
-            color: white;
-        }
-
-        .login-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .alert {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: #fecaca;
-            border-radius: 12px;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            font-weight: 500;
-        }
-
-        .demo-section {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .demo-title {
-            color: white;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            text-align: center;
-            font-size: 0.9rem;
-        }
-
-        .demo-accounts {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 1rem;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .demo-account {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5rem;
-            margin-bottom: 0.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .demo-account:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateX(3px);
-        }
-
-        .demo-account-info {
-            flex: 1;
-        }
-
-        .demo-parent-name {
-            color: white;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        .demo-parent-id {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.8rem;
-        }
-
-        .demo-children {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.8rem;
-            text-align: right;
-        }
-
-        .loading-spinner {
-            display: none;
-            margin-right: 0.5rem;
-        }
-
-        /* Animations */
-        .fade-in {
-            animation: fadeIn 0.8s ease-out;
-        }
-
-               /* Complete CSS for Student Login Link Under Demo Accounts */
-
-.parent-login-link {
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
+.brand-section {
     text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.brand-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 2.5rem;
+    color: white;
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+}
+
+.brand-title {
+    color: white;
+    font-weight: 800;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.brand-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+}
+
+.login-form {
+    margin-top: 2rem;
+}
+
+.form-label {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.form-control {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-bottom: 1.5rem;
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: #6366f1;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+    outline: none;
+    color: white;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.input-group {
     position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.input-group i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.7);
+    z-index: 3;
+}
+
+.input-group .form-control {
+    padding-left: 3rem;
+    margin-bottom: 0;
+}
+
+.login-btn {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none;
+    color: white;
+    font-weight: 700;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+}
+
+.login-btn:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+    color: white;
+}
+
+.login-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.alert {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fecaca;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+.demo-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.demo-title {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.demo-accounts {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1rem;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.demo-account {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.demo-account:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(3px);
+}
+
+.demo-account-info {
+    flex: 1;
+}
+
+.demo-parent-name {
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.demo-parent-id {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8rem;
+}
+
+.demo-children {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.8rem;
+    text-align: right;
+}
+
+.loading-spinner {
+    display: none;
+    margin-right: 0.5rem;
+}
+
+/* Student Login Portal at Bottom */
+.parent-login-link {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(15px);
+    padding: 15px 20px;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+    margin: 0;
 }
 
 .parent-login-link a {
@@ -244,277 +245,80 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.9);
     text-decoration: none;
     font-weight: 600;
-    font-size: 0.95rem;
-    padding: 12px 20px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 12px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.9rem;
+    padding: 10px 18px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    transition: all 0.3s ease;
     backdrop-filter: blur(10px);
-    position: relative;
-    overflow: hidden;
-}
-
-/* Subtle gradient overlay */
-.parent-login-link a::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        90deg, 
-        transparent, 
-        rgba(255, 255, 255, 0.1), 
-        transparent
-    );
-    transition: left 0.6s ease;
-    z-index: 1;
-}
-
-.parent-login-link a:hover::before {
-    left: 100%;
 }
 
 .parent-login-link a:hover {
     color: white;
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-.parent-login-link a:active {
-    transform: translateY(0);
-    transition: transform 0.1s ease;
-}
-
-/* Icon styling */
 .parent-login-link a i {
-    font-size: 1rem;
-    position: relative;
-    z-index: 2;
-}
-
-/* Text styling */
-.parent-login-link a span,
-.parent-login-link a {
-    position: relative;
-    z-index: 2;
-}
-
-/* Alternative styles - you can switch between these */
-
-/* Option 1: Gradient button style */
-.parent-login-link.gradient a {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.6), rgba(139, 92, 246, 0.6));
-    border: 1px solid rgba(99, 102, 241, 0.3);
-    color: white;
-    font-weight: 700;
-}
-
-.parent-login-link.gradient a:hover {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.8), rgba(139, 92, 246, 0.8));
-    border-color: rgba(99, 102, 241, 0.5);
-    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
-}
-
-/* Option 2: Outlined style */
-.parent-login-link.outlined a {
-    background: transparent;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    color: rgba(255, 255, 255, 0.9);
-    font-weight: 600;
-}
-
-.parent-login-link.outlined a:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: white;
-    color: white;
-}
-
-/* Option 3: Minimal style */
-.parent-login-link.minimal {
-    border-top: none;
-    padding-top: 1rem;
-    margin-top: 1rem;
-}
-
-.parent-login-link.minimal a {
-    background: none;
-    border: none;
-    padding: 8px 12px;
-    color: rgba(255, 255, 255, 0.7);
-    font-weight: 500;
     font-size: 0.9rem;
 }
 
-.parent-login-link.minimal a:hover {
-    color: white;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    transform: none;
-    box-shadow: none;
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.8s ease-out;
 }
 
-/* Option 4: Card style */
-.parent-login-link.card {
-    margin-top: 2rem;
-    padding: 0;
-    border-top: none;
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.parent-login-link.card a {
-    display: block;
-    width: 100%;
-    padding: 16px 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
-    color: white;
-    font-weight: 600;
-    backdrop-filter: blur(15px);
-}
-
-.parent-login-link.card a:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-}
-
-/* Option 5: Compact style */
-.parent-login-link.compact {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.parent-login-link.compact a {
-    font-size: 0.85rem;
-    padding: 8px 16px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-}
-
-.parent-login-link.compact a:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-}
-
-/* Responsive design */
+/* Responsive */
 @media (max-width: 768px) {
+    body {
+        padding-bottom: 60px;
+    }
+    
+    .login-container {
+        margin: 1rem;
+        padding: 2rem;
+    }
+    
+    .brand-title {
+        font-size: 1.5rem;
+    }
+    
     .parent-login-link {
-        margin-top: 1.25rem;
-        padding-top: 1.25rem;
-    }
-    
-    .parent-login-link a {
-        font-size: 0.9rem;
-        padding: 10px 18px;
-    }
-    
-    .parent-login-link.card a {
-        padding: 14px 18px;
-    }
-    
-    .parent-login-link.compact a {
-        font-size: 0.8rem;
-        padding: 7px 14px;
-    }
-}
-
-@media (max-width: 480px) {
-    .parent-login-link {
-        margin-top: 1rem;
-        padding-top: 1rem;
+        padding: 12px 15px;
     }
     
     .parent-login-link a {
         font-size: 0.85rem;
-        padding: 9px 16px;
-        gap: 6px;
+        padding: 8px 14px;
     }
 }
 
-/* Animation for page load */
-@keyframes slideInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.parent-login-link {
-    animation: slideInUp 0.6s ease-out 0.3s both;
-}
-
-/* Focus states for accessibility */
-.parent-login-link a:focus {
-    outline: 2px solid rgba(99, 102, 241, 0.8);
-    outline-offset: 2px;
-}
-
-.parent-login-link a:focus:not(:focus-visible) {
-    outline: none;
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-    .parent-login-link a {
-        border: 2px solid rgba(255, 255, 255, 0.8);
-        background: rgba(0, 0, 0, 0.3);
-    }
-    
-    .parent-login-link a:hover {
-        border-color: white;
-        background: rgba(0, 0, 0, 0.5);
-    }
-}
-
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-    .parent-login-link a {
-        transition: none;
-    }
-    
-    .parent-login-link a::before {
-        display: none;
-    }
-    
-    .parent-login-link a:hover {
-        transform: none;
+@media (max-width: 480px) {
+    body {
+        padding-bottom: 55px;
     }
     
     .parent-login-link {
-        animation: none;
+        padding: 10px 12px;
+    }
+    
+    .parent-login-link a {
+        font-size: 0.8rem;
+        padding: 7px 12px;
+        gap: 6px;
     }
 }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .login-container {
-                margin: 1rem;
-                padding: 2rem;
-            }
-            
-            .brand-title {
-                font-size: 1.5rem;
-            }
-        }
     </style>
 </head>
 
@@ -849,6 +653,7 @@
     </script>
 </body>
 </html>
+
 
 
 
