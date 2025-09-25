@@ -226,87 +226,60 @@ body {
 }
 
 /* Student Login Portal at Bottom */
-.parent-login-link.fab {
+.parent-login-link.bottom-bar {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: none;
-    border: none;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(30, 30, 30, 0.8));
+    backdrop-filter: blur(20px);
     padding: 0;
+    text-align: center;
+    border-top: 2px solid rgba(99, 102, 241, 0.3);
     z-index: 1000;
     margin: 0;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
 }
 
-.parent-login-link.fab a {
+.parent-login-link.bottom-bar a {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, #6366f1, #8b5cf6);
-    border: none;
-    border-radius: 50%;
+    gap: 12px;
     color: white;
     text-decoration: none;
-    font-weight: 700;
-    font-size: 1.2rem;
-    box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4);
-    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    backdrop-filter: blur(10px);
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 18px 20px;
+    background: transparent;
+    border: none;
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
 }
 
-.parent-login-link.fab a::before {
+.parent-login-link.bottom-bar a::before {
     content: '';
     position: absolute;
     top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
-    border-radius: 50%;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.2), transparent);
+    transition: left 0.6s ease;
 }
 
-.parent-login-link.fab a:hover {
-    transform: scale(1.1) translateY(-5px);
-    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.6);
+.parent-login-link.bottom-bar a:hover::before {
+    left: 100%;
 }
 
-.parent-login-link.fab a:hover::before {
-    opacity: 1;
+.parent-login-link.bottom-bar a:hover {
+    background: rgba(99, 102, 241, 0.1);
+    color: #a5b4fc;
 }
 
-.parent-login-link.fab a:active {
-    transform: scale(0.95);
-}
-
-/* Tooltip for FAB */
-.parent-login-link.fab a::after {
-    content: 'Student Login';
-    position: absolute;
-    right: 70px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    white-space: nowrap;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-    pointer-events: none;
-}
-
-.parent-login-link.fab a:hover::after {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(-50%) translateX(-5px);
+.parent-login-link.bottom-bar a i {
+    font-size: 1.1rem;
 }
 /* Animations */
 .fade-in {
@@ -692,6 +665,7 @@ body {
     </script>
 </body>
 </html>
+
 
 
 
