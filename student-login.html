@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Login - TuckshopKonnect</title>
+    
+    <!-- External CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #10b981, #059669 100%);
+            min-height: 100vh;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            width: 100%;
+            max-width: 450px;
+            padding: 3rem;
+            margin: 2rem;
+        }
+
+        .brand-section {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .brand-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #0e4835, #2e9b79);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: 0 0 30px rgba(19, 195, 159, 0.5);
+        }
+
+        .brand-title {
+            color: white;
+            font-weight: 800;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .brand-subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        .student-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #0e5333, #0dcc30);
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .login-form {
+            margin-top: 2rem;
+        }
+
+        .form-label {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #0dcc30;
+            box-shadow: 0 0 20px rgba(13, 204, 48, 0.3);
+            outline: none;
+            color: white;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            z-index: 3;
+        }
+
+        .input-group .form-control {
+            padding-left: 3rem;
+            margin-bottom: 0;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #0e4835, #2e9b79);
+            border: none;
+            color: white;
+            font-weight: 700;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-shadow: 0 8px 25px rgba(14, 72, 53, 0.3);
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(14, 72, 53, 0.4);
+            color: white;
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fecaca;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .demo-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .demo-title {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .demo-accounts {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .demo-account {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .demo-account:hover {
+            background: rgba(13, 204, 48, 0.1);
+            transform: translateX(3px);
+        }
+
+        .demo-student-info {
+            flex: 1;
+        }
+
+        .demo-student-name {
+            color: white;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .demo-student-id {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+        }
+
+        .demo-balance {
+            color: #0dcc30;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .loading-spinner {
+            display: none;
+            margin-right: 0.5rem;
+        }
+
+        .parent-login-link {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .parent-login-link a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .parent-login-link a:hover {
+            color: #e2e8f0;
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .login-container {
+                margin: 1rem;
+                padding: 2rem;
+            }
+            
+            .brand-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container fade-in">
+        <!-- Brand Section -->
+        <div class="brand-section">
+            <div class="brand-icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1 class="brand-title">TuckshopKonnect</h1>
+            <p class="brand-subtitle">Student Shopping Portal</p>
+            <span class="student-badge">Student Access</span>
+        </div>
+
+        <!-- Error Alert -->
+        <div id="errorAlert" class="alert" style="display: none;">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span id="errorMessage">Invalid Student ID or Password</span>
+        </div>
+
+        <!-- Login Form -->
+        <form class="login-form" id="loginForm">
+            <div class="input-group">
+                <i class="fas fa-id-card"></i>
+                <input type="text" class="form-control" id="studentId" placeholder="Enter Student ID (e.g., STU001)" required>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" class="form-control" id="password" placeholder="Enter Password" required>
+            </div>
+
+            <button type="submit" class="login-btn" id="loginBtn">
+                <span class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </span>
+                <i class="fas fa-shopping-cart me-2"></i>
+                Login to Tuckshop
+            </button>
+        </form>
+
+        <!-- Demo Accounts Section -->
+        <div class="demo-section">
+            <p class="demo-title">Demo Student Accounts (Click to use)</p>
+            <div class="demo-accounts" id="demoAccounts">
+                <!-- Demo accounts will be populated here -->
+            </div>
+        </div>
+
+        <!-- Parent Login Link -->
+        <div class="parent-login-link">
+            <a href="parent login.html">
+                <i class="fas fa-users me-1"></i>
+                Parent Login Portal
+            </a>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Demo student accounts with passwords (in production, passwords would be hashed)
+        const demoStudents = [
+            { id: 'STU001', password: 'student123', name: 'Kemi Adebayo', class: 'JSS2A', balance: 2500 },
+            { id: 'STU002', password: 'student123', name: 'Emeka Okafor', class: 'SS1B', balance: 1800 },
+            { id: 'STU003', password: 'student123', name: 'Fatima Ibrahim', class: 'JSS1C', balance: 3200 },
+            { id: 'STU004', password: 'student123', name: 'David Okoro', class: 'SS2A', balance: 950 },
+            { id: 'STU005', password: 'student123', name: 'Tolu Adeyemi', class: 'JSS3B', balance: 4100 },
+            { id: 'STU006', password: 'student123', name: 'Chinedu Ezeh', class: 'SS1A', balance: 750 },
+            { id: 'STU007', password: 'student123', name: 'Amina Yakubu', class: 'JSS2C', balance: 2800 },
+            { id: 'STU008', password: 'student123', name: 'Folake Ajayi', class: 'SS3A', balance: 1650 },
+            { id: 'STU009', password: 'student123', name: 'Kelechi Nnadi', class: 'JSS1A', balance: 3750 },
+            { id: 'STU010', password: 'student123', name: 'Nkem Obi', class: 'SS2B', balance: 1200 },
+        ];
+
+        // Session management
+        let sessionTimeout;
+        const SESSION_DURATION = 45 * 60 * 1000; // 45 minutes for students
+
+        function startSession() {
+            clearTimeout(sessionTimeout);
+            sessionTimeout = setTimeout(() => {
+                alert('Your session has expired. Please login again.');
+                logout();
+            }, SESSION_DURATION);
+        }
+
+        function resetSessionTimer() {
+            if (sessionStorage.getItem('studentLoggedIn')) {
+                startSession();
+            }
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'student-login.html';
+        }
+
+        // Populate demo accounts
+        function populateDemoAccounts() {
+            const container = document.getElementById('demoAccounts');
+            container.innerHTML = '';
+
+            demoStudents.forEach(student => {
+                const accountDiv = document.createElement('div');
+                accountDiv.className = 'demo-account';
+                accountDiv.onclick = () => useDemoAccount(student.id, student.password);
+
+                accountDiv.innerHTML = `
+                    <div class="demo-student-info">
+                        <div class="demo-student-name">${student.name}</div>
+                        <div class="demo-student-id">${student.id} - ${student.class}</div>
+                    </div>
+                    <div class="demo-balance">
+                        Balance: ₦${student.balance.toLocaleString()}
+                    </div>
+                `;
+
+                container.appendChild(accountDiv);
+            });
+        }
+
+        function useDemoAccount(studentId, password) {
+            document.getElementById('studentId').value = studentId;
+            document.getElementById('password').value = password;
+        }
+
+        function showError(message) {
+            const errorAlert = document.getElementById('errorAlert');
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorAlert.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('errorAlert').style.display = 'none';
+        }
+
+        function setLoadingState(loading) {
+            const loginBtn = document.getElementById('loginBtn');
+            const spinner = loginBtn.querySelector('.loading-spinner');
+            
+            if (loading) {
+                loginBtn.disabled = true;
+                spinner.style.display = 'inline-block';
+                loginBtn.innerHTML = spinner.outerHTML + ' Authenticating...';
+            } else {
+                loginBtn.disabled = false;
+                spinner.style.display = 'none';
+                loginBtn.innerHTML = '<i class="fas fa-shopping-cart me-2"></i>Login to Tuckshop';
+            }
+        }
+
+        function authenticateStudent(studentId, password) {
+            return new Promise((resolve) => {
+                // Simulate API call delay
+                setTimeout(() => {
+                    const student = demoStudents.find(s => s.id === studentId && s.password === password);
+                    if (student) {
+                        resolve({ success: true, student: student });
+                    } else {
+                        resolve({ success: false, message: 'Invalid Student ID or Password' });
+                    }
+                }, 1200);
+            });
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            hideError();
+            
+            const studentId = document.getElementById('studentId').value.trim().toUpperCase();
+            const password = document.getElementById('password').value.trim();
+            
+            if (!studentId || !password) {
+                showError('Please enter both Student ID and Password');
+                return;
+            }
+            
+            setLoadingState(true);
+            
+            authenticateStudent(studentId, password)
+                .then(result => {
+                    setLoadingState(false);
+                    
+                    if (result.success) {
+                        // Store student session data
+                        sessionStorage.setItem('studentLoggedIn', 'true');
+                        sessionStorage.setItem('currentStudent', JSON.stringify(result.student));
+                        sessionStorage.setItem('studentLoginTime', new Date().toISOString());
+                        
+                        // Start session timer
+                        startSession();
+                        
+                        // Redirect to student tuckshop
+                        window.location.href = 'student-tuckshop.html';
+                    } else {
+                        showError(result.message);
+                        // Clear password for security
+                        document.getElementById('password').value = '';
+                    }
+                })
+                .catch(error => {
+                    setLoadingState(false);
+                    console.error('Student login error:', error);
+                    showError('An error occurred. Please try again.');
+                });
+        }
+
+        // Activity tracking for session management
+        function trackActivity() {
+            ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+                document.addEventListener(event, resetSessionTimer, true);
+            });
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if already logged in
+            if (sessionStorage.getItem('studentLoggedIn')) {
+                window.location.href = 'student-tuckshop.html';
+                return;
+            }
+
+            populateDemoAccounts();
+            trackActivity();
+            
+            // Handle form submission
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            
+            // Auto-focus on Student ID input
+            document.getElementById('studentId').focus();
+            
+            // Hide error on input
+            document.getElementById('studentId').addEventListener('input', hideError);
+            document.getElementById('password').addEventListener('input', hideError);
+
+            // Clear password field on page load for security
+            document.getElementById('password').value = '';
+        });
+
+        // Prevent back button after logout
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+    </script>
+</body>
+</html>

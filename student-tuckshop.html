@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Tuckshop - TuckshopKonnect</title>
+    
+    <!-- External CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #10b981, #059669 100%);
+    min-height: 100vh;
+    color: #1f2937;
+}
+
+/* Header */
+.header {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar-brand {
+    font-weight: 800;
+    color: white !important;
+    font-size: 1.8rem;
+    text-decoration: none;
+}
+
+.navbar-brand:hover {
+    transform: scale(1.05);
+    transition: all 0.3s ease;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    margin: 0 0.5rem;
+    padding: 0.75rem 1.25rem !important;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+.balance-display {
+    background: linear-gradient(135deg, #0e4835, #2e9b79);
+    border-radius: 25px;
+    padding: 0.5rem 1.5rem;
+    color: white;
+    font-weight: 600;
+    margin-right: 1rem;
+    box-shadow: 0 4px 15px rgba(14, 72, 53, 0.3);
+}
+
+.cart-btn {
+    position: relative;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-right: 1rem;
+}
+
+.cart-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ef4444;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+/* Content */
+.content-container {
+    padding: 2rem 0;
+}
+
+.welcome-section {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+}
+
+.welcome-title {
+    color: white;
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.student-info {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-top: 1rem;
+    display: inline-block;
+}
+
+.student-name {
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.student-details {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+}
+
+/* Category Filters */
+.category-filters {
+    margin-bottom: 2rem;
+    position: sticky;
+    top: 90px;
+    z-index: 999;
+    background: rgba(16, 185, 129, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 1rem;
+    border-radius: 15px;
+}
+
+.filter-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    margin: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: linear-gradient(135deg, #0e4835, #2e9b79);
+    border-color: #0e4835;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(14, 72, 53, 0.3);
+}
+
+/* Product Grid */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.product-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.product-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border-color: rgba(13, 204, 48, 0.5);
+}
+
+.product-image {
+    height: 200px;
+    background: linear-gradient(135deg, #0e4835, #2e9b79);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: white;
+    position: relative;
+}
+
+.product-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(13, 204, 48, 0.9);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.stock-display {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+}
+
+.stock-high {
+    background: rgba(34, 197, 94, 0.9);
+    color: white;
+}
+
+.stock-medium {
+    background: rgba(234, 179, 8, 0.9);
+    color: white;
+}
+
+.stock-low {
+    background: rgba(239, 68, 68, 0.9);
+    color: white;
+}
+
+.stock-out {
+    background: rgba(107, 114, 128, 0.9);
+    color: white;
+}
+
+.product-info {
+    padding: 1.5rem;
+}
+
+.product-name {
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.product-description {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.product-price {
+    color: #0dcc30;
+    font-weight: 800;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+}
+
+.add-to-cart-btn {
+    background: linear-gradient(135deg, #0e4835, #2e9b79);
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(14, 72, 53, 0.4);
+    color: white;
+}
+
+.out-of-stock {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.out-of-stock .product-badge {
+    background: #ef4444;
+}
+
+.insufficient-funds .add-to-cart-btn {
+    background: #ef4444;
+    cursor: not-allowed;
+}
+
+.low-stock-warning {
+    background: rgba(234, 179, 8, 0.1);
+    border: 1px solid rgba(234, 179, 8, 0.3);
+    color: #eab308;
+    padding: 0.5rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Cart Sidebar */
+.cart-sidebar {
+    position: fixed;
+    top: 0;
+    right: -450px;
+    width: 450px;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(20px);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    z-index: 2000;
+    overflow-y: auto;
+}
+
+.cart-sidebar.open {
+    right: 0;
+}
+
+.cart-header {
+    background: linear-gradient(135deg, #0e4835, #2e9b79);
+    padding: 2rem;
+    color: white;
+}
+
+.cart-title {
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.cart-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.cart-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.1);
+}
+
+.cart-body {
+    padding: 2rem;
+}
+
+.cart-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.cart-empty i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.cart-item {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cart-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.cart-item-info h6 {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.cart-item-stock {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.cart-item-price {
+    color: #0dcc30;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.qty-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.qty-btn:hover:not(:disabled) {
+    background: rgba(13, 204, 48, 0.3);
+    border-color: #0dcc30;
+}
+
+.qty-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.quantity-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    width: 60px;
+    height: 36px;
+    text-align: center;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.quantity-input:focus {
+    outline: none;
+    border-color: #0dcc30;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.remove-item {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.remove-item:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.stock-warning {
+    background: rgba(234, 179, 8, 0.1);
+    border: 1px solid rgba(234, 179, 8, 0.3);
+    color: #eab308;
+    padding: 0.5rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cart-footer {
+    padding: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(15, 23, 42, 0.8);
+}
+
+.cart-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.total-label {
+    color: white;
+}
+
+.total-amount {
+    color: #0dcc30;
+}
+
+.checkout-btn {
+    background: linear-gradient(135deg, #0e4835, #2e9b79);
+    border: none;
+    color: white;
+    font-weight: 700;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    width: 100%;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.checkout-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(14, 72, 53, 0.4);
+    color: white;
+}
+
+.checkout-btn:disabled {
+    background: #6b7280;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Overlay */
+.cart-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1500;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.cart-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Receipt Modal */
+.modal-content {
+    border-radius: 24px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+}
+
+.modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+}
+
+.modal-title {
+    font-weight: 700;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.btn-close {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    opacity: 1;
+    width: 40px;
+    height: 40px;
+}
+
+.receipt-content {
+    padding: 2rem;
+    color: white;
+}
+
+.receipt-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(13, 204, 48, 0.3);
+}
+
+.receipt-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.receipt-item:last-child {
+    border-bottom: none;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #0dcc30;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 2px solid rgba(13, 204, 48, 0.3);
+}
+
+/* Success Animations */
+.success-message {
+    background: linear-gradient(135deg, #0e4835, #2e9b79);
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .cart-sidebar {
+        width: 100%;
+        right: -100%;
+    }
+    
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .welcome-title {
+        font-size: 2rem;
+    }
+
+    .category-filters {
+        position: relative;
+        top: auto;
+    }
+}
+
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.bounce-in {
+    animation: bounceIn 0.5s ease-out;
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.05); }
+    70% { transform: scale(0.9); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(234, 179, 8, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(234, 179, 8, 0); }
+}
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg">
+                <a class="navbar-brand" href="#">
+                    <i class="fas fa-graduation-cap me-2"></i>TuckshopKonnect
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fas fa-store me-1"></i>Tuckshop</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showTransactionHistory()"><i class="fas fa-history me-1"></i>History</a>
+                        </li>
+                    </ul>
+                    
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <div class="balance-display" id="balanceDisplay">
+                                <i class="fas fa-wallet me-1"></i>₦0
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <button class="cart-btn" onclick="toggleCart()">
+                                <i class="fas fa-shopping-cart me-1"></i>Cart
+                                <span class="cart-count" id="cartCount">0</span>
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link btn btn-link" onclick="confirmLogout()">
+                                <i class="fas fa-sign-out-alt me-1"></i><span id="headerStudentName">Student</span> - Logout
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content-container">
+        <div class="container">
+            <!-- Welcome Section -->
+            <div class="welcome-section fade-in">
+                <h1 class="welcome-title">Welcome to Tuckshop!</h1>
+                <p style="color: rgba(255, 255, 255, 0.8); font-size: 1.2rem; margin-bottom: 0;">Choose your favorite snacks and treats</p>
+                <div class="student-info">
+                    <div class="student-name" id="studentName">Loading...</div>
+                    <div class="student-details" id="studentDetails">Class: ... | Student ID: ...</div>
+                </div>
+            </div>
+
+            <!-- Category Filters -->
+            <div class="category-filters text-center fade-in">
+                <button class="filter-btn active" data-category="all" onclick="filterProducts('all')">
+                    <i class="fas fa-th-large me-1"></i>All Items
+                </button>
+                <button class="filter-btn" data-category="snacks" onclick="filterProducts('snacks')">
+                    <i class="fas fa-cookie-bite me-1"></i>Snacks
+                </button>
+                <button class="filter-btn" data-category="drinks" onclick="filterProducts('drinks')">
+                    <i class="fas fa-glass-water me-1"></i>Drinks
+                </button>
+                <button class="filter-btn" data-category="supplies" onclick="filterProducts('supplies')">
+                    <i class="fas fa-pencil-alt me-1"></i>Supplies
+                </button>
+                <button class="filter-btn" data-category="lunch" onclick="filterProducts('lunch')">
+                    <i class="fas fa-hamburger me-1"></i>Lunch
+                </button>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="products-grid fade-in" id="productsGrid">
+                <!-- Products will be populated here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <button class="cart-close" onclick="closeCart()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h3 class="cart-title">Shopping Cart</h3>
+            <p style="margin: 0; opacity: 0.9;">Review your items</p>
+        </div>
+        
+        <div class="cart-body" id="cartBody">
+            <div class="cart-empty">
+                <i class="fas fa-shopping-cart"></i>
+                <h5>Your cart is empty</h5>
+                <p>Add some delicious items to get started!</p>
+            </div>
+        </div>
+        
+        <div class="cart-footer" id="cartFooter" style="display: none;">
+            <div class="cart-total">
+                <span class="total-label">Total:</span>
+                <span class="total-amount" id="cartTotal">₦0</span>
+            </div>
+            <button class="checkout-btn" id="checkoutBtn" onclick="processCheckout()">
+                <i class="fas fa-credit-card me-2"></i>Purchase Items
+            </button>
+        </div>
+    </div>
+
+    <!-- Receipt Modal -->
+    <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="receiptModalLabel">
+                        <i class="fas fa-receipt me-2"></i>Purchase Receipt
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="receipt-content" id="receiptContent">
+                        <!-- Receipt details will be populated here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="printReceipt()">
+                        <i class="fas fa-print me-1"></i>Print Receipt
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Sample products data
+        const products = [
+            // Snacks
+            { id: 1, name: 'Chocolate Bar', price: 150, category: 'snacks', icon: '🍫', description: 'Rich milk chocolate bar', stock: 50 },
+            { id: 2, name: 'Potato Chips', price: 200, category: 'snacks', icon: '🍟', description: 'Crunchy potato chips', stock: 8 },
+            { id: 3, name: 'Biscuits Pack', price: 100, category: 'snacks', icon: '🍪', description: 'Assorted biscuits pack', stock: 25 },
+            { id: 4, name: 'Meat Pie', price: 300, category: 'snacks', icon: '🥧', description: 'Fresh baked meat pie', stock: 3 },
+            { id: 5, name: 'Puff Puff', price: 50, category: 'snacks', icon: '🧁', description: 'Sweet fried dough balls (3 pieces)', stock: 40 },
+            
+            // Drinks
+            { id: 6, name: 'Soft Drink', price: 150, category: 'drinks', icon: '🥤', description: 'Chilled soft drink', stock: 60 },
+            { id: 7, name: 'Fruit Juice', price: 200, category: 'drinks', icon: '🧃', description: 'Fresh fruit juice', stock: 35 },
+            { id: 8, name: 'Bottled Water', price: 100, category: 'drinks', icon: '🍼', description: 'Pure bottled water', stock: 0 },
+            { id: 9, name: 'Energy Drink', price: 250, category: 'drinks', icon: '⚡', description: 'Energy boost drink', stock: 20 },
+            
+            // Supplies
+            { id: 10, name: 'Blue Pen', price: 80, category: 'supplies', icon: '✏️', description: 'Ballpoint pen - blue ink', stock: 50 },
+            { id: 11, name: 'Exercise Book', price: 120, category: 'supplies', icon: '📖', description: '40 leaves exercise book', stock: 5 },
+            { id: 12, name: 'Pencil Set', price: 150, category: 'supplies', icon: '✏️', description: 'Set of 5 pencils with eraser', stock: 25 },
+            { id: 13, name: 'Ruler', price: 100, category: 'supplies', icon: '📏', description: '30cm transparent ruler', stock: 20 },
+            
+            // Lunch
+            { id: 14, name: 'Rice & Stew', price: 500, category: 'lunch', icon: '🍚', description: 'Jollof rice with chicken stew', stock: 20 },
+            { id: 15, name: 'Fried Rice', price: 600, category: 'lunch', icon: '🍛', description: 'Fried rice with vegetables', stock: 15 },
+            { id: 16, name: 'Sandwich', price: 400, category: 'lunch', icon: '🥪', description: 'Chicken sandwich with vegetables', stock: 25 },
+            { id: 17, name: 'Noodles', price: 300, category: 'lunch', icon: '🍜', description: 'Instant noodles with egg', stock: 2 }
+        ];
+
+        // Global variables
+        let currentStudent = null;
+        let cart = [];
+        let currentCategory = 'all';
+        let sessionTimeout;
+        const SESSION_DURATION = 45 * 60 * 1000; // 45 minutes
+        const LOW_STOCK_THRESHOLD = 10;
+
+        // Session management
+        function startSession() {
+            clearTimeout(sessionTimeout);
+            sessionTimeout = setTimeout(() => {
+                alert('Your session has expired. Please login again.');
+                logout();
+            }, SESSION_DURATION);
+        }
+
+        function resetSessionTimer() {
+            startSession();
+        }
+
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'student-login.html';
+        }
+
+        function confirmLogout() {
+            if (confirm('Are you sure you want to logout from TuckshopKonnect?')) {
+                logout();
+            }
+        }
+
+        // Load student data
+        function loadStudentData() {
+            const studentData = sessionStorage.getItem('currentStudent');
+            
+            if (!studentData) {
+                // Mock student data for demo
+                currentStudent = {
+                    id: 'STU001',
+                    name: 'John Doe',
+                    class: 'SS2A',
+                    balance: 5000
+                };
+                sessionStorage.setItem('currentStudent', JSON.stringify(currentStudent));
+            } else {
+                try {
+                    currentStudent = JSON.parse(studentData);
+                } catch (error) {
+                    console.error('Error loading student data:', error);
+                    // Use mock data as fallback
+                    currentStudent = {
+                        id: 'STU001',
+                        name: 'John Doe',
+                        class: 'SS2A',
+                        balance: 5000
+                    };
+                }
+            }
+            
+            updateUI();
+            return true;
+        }
+
+        // Get stock status and class
+        function getStockStatus(stock) {
+            if (stock === 0) return { status: 'Out of Stock', class: 'stock-out' };
+            if (stock <= 5) return { status: `${stock} left`, class: 'stock-low' };
+            if (stock <= LOW_STOCK_THRESHOLD) return { status: `${stock} left`, class: 'stock-medium' };
+            return { status: `${stock} available`, class: 'stock-high' };
+        }
+
+        // Get available stock for product (considering cart)
+        function getAvailableStock(productId) {
+            const product = products.find(p => p.id === productId);
+            const cartItem = cart.find(item => item.id === productId);
+            const cartQuantity = cartItem ? cartItem.quantity : 0;
+            return product.stock - cartQuantity;
+        }
+
+        // Update UI with student data
+        function updateUI() {
+            if (!currentStudent) return;
+            
+            document.getElementById('headerStudentName').textContent = currentStudent.name.split(' ')[0];
+            document.getElementById('studentName').textContent = currentStudent.name;
+            document.getElementById('studentDetails').textContent = `Class: ${currentStudent.class} | Student ID: ${currentStudent.id}`;
+            document.getElementById('balanceDisplay').innerHTML = `<i class="fas fa-wallet me-1"></i>₦${currentStudent.balance.toLocaleString()}`;
+            
+            renderProducts();
+        }
+
+        // Render products
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            const filteredProducts = currentCategory === 'all' ? products : products.filter(p => p.category === currentCategory);
+            
+            grid.innerHTML = '';
+            
+            filteredProducts.forEach(product => {
+                const availableStock = getAvailableStock(product.id);
+                const stockInfo = getStockStatus(availableStock);
+                const canAfford = currentStudent.balance >= product.price;
+                const inStock = availableStock > 0;
+                const isLowStock = availableStock > 0 && availableStock <= 5;
+                
+                const productCard = document.createElement('div');
+                productCard.className = `product-card ${!inStock ? 'out-of-stock' : ''} ${!canAfford && inStock ? 'insufficient-funds' : ''} ${isLowStock ? 'pulse' : ''}`;
+                
+                productCard.innerHTML = `
+                    <div class="product-image">
+                        <span style="font-size: 4rem;">${product.icon}</span>
+                        <div class="stock-display ${stockInfo.class}">
+                            <i class="fas fa-box me-1"></i>${stockInfo.status}
+                        </div>
+                        <div class="product-badge">${inStock ? 'Available' : 'Out of Stock'}</div>
+                    </div>
+                    <div class="product-info">
+                        ${isLowStock ? `
+                            <div class="low-stock-warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span>Hurry! Only ${availableStock} left in stock</span>
+                            </div>
+                        ` : ''}
+                        <h4 class="product-name">${product.name}</h4>
+                        <p class="product-description">${product.description}</p>
+                        <div class="product-price">₦${product.price.toLocaleString()}</div>
+                        <button class="add-to-cart-btn" onclick="addToCart(${product.id})" 
+                                ${!inStock || !canAfford ? 'disabled' : ''}>
+                            ${!inStock ? 'Out of Stock' : !canAfford ? 'Insufficient Funds' : 'Add to Cart'}
+                        </button>
+                    </div>
+                `;
+                
+                grid.appendChild(productCard);
+            });
+        }
+
+        // Filter products (maintains filter state)
+        function filterProducts(category) {
+            currentCategory = category;
+            
+            // Update active filter button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-category="${category}"]`).classList.add('active');
+            
+            renderProducts();
+        }
+
+        // Cart functions
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const availableStock = getAvailableStock(productId);
+            
+            if (!product || availableStock <= 0 || currentStudent.balance < product.price) return;
+            
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+            
+            updateCartUI();
+            renderProducts(); // Update product display to show new available stock
+            showCartNotification();
+        }
+
+        function updateCartQuantity(productId, change) {
+            const item = cart.find(item => item.id === productId);
+            if (!item) return;
+            
+            const availableStock = getAvailableStock(productId);
+            const newQuantity = item.quantity + change;
+            
+            // Validate quantity
+            if (newQuantity <= 0) {
+                removeFromCart(productId);
+                return;
+            }
+            
+            if (change > 0 && availableStock < change) {
+                showStockWarning(`Only ${availableStock + item.quantity} available for ${item.name}`);
+                return;
+            }
+            
+            item.quantity = newQuantity;
+            updateCartUI();
+            renderProducts(); // Update product display
+        }
+
+        function setCartQuantity(productId, quantity) {
+            const item = cart.find(item => item.id === productId);
+            if (!item) return;
+            
+            const product = products.find(p => p.id === productId);
+            const maxAvailable = product.stock;
+            
+            // Validate quantity
+            if (quantity <= 0) {
+                removeFromCart(productId);
+                return;
+            }
+            
+            if (quantity > maxAvailable) {
+                showStockWarning(`Only ${maxAvailable} available for ${item.name}`);
+                return;
+            }
+            
+            item.quantity = quantity;
+            updateCartUI();
+            renderProducts();
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartUI();
+            renderProducts(); // Update product display
+        }
+
+        function updateCartUI() {
+            const cartCount = document.getElementById('cartCount');
+            const cartBody = document.getElementById('cartBody');
+            const cartFooter = document.getElementById('cartFooter');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            cartCount.textContent = totalItems;
+            cartTotal.textContent = `₦${totalPrice.toLocaleString()}`;
+            
+            if (cart.length === 0) {
+                cartBody.innerHTML = `
+                    <div class="cart-empty">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h5>Your cart is empty</h5>
+                        <p>Add some delicious items to get started!</p>
+                    </div>
+                `;
+                cartFooter.style.display = 'none';
+            } else {
+                cartBody.innerHTML = cart.map(item => {
+                    const product = products.find(p => p.id === item.id);
+                    const availableStock = product.stock;
+                    const stockWarning = item.quantity > availableStock;
+                    const canIncrease = item.quantity < availableStock;
+                    
+                    return `
+                        <div class="cart-item">
+                            <div class="cart-item-header">
+                                <div class="cart-item-info">
+                                    <h6>${item.name}</h6>
+                                    <div class="cart-item-stock">Stock: ${availableStock} available</div>
+                                </div>
+                                <div class="cart-item-price">₦${(item.price * item.quantity).toLocaleString()}</div>
+                            </div>
+                            
+                            ${stockWarning ? `
+                                <div class="stock-warning">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <span>Insufficient stock! Only ${availableStock} available</span>
+                                </div>
+                            ` : ''}
+                            
+                            <div class="quantity-controls">
+                                <button class="qty-btn" onclick="updateCartQuantity(${item.id}, -1)">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" 
+                                       class="quantity-input" 
+                                       value="${item.quantity}" 
+                                       min="1" 
+                                       max="${availableStock}"
+                                       onchange="setCartQuantity(${item.id}, parseInt(this.value) || 1)"
+                                       onkeypress="if(event.key==='Enter') setCartQuantity(${item.id}, parseInt(this.value) || 1)">
+                                <button class="qty-btn" 
+                                        onclick="updateCartQuantity(${item.id}, 1)" 
+                                        ${!canIncrease ? 'disabled' : ''}>
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            
+                            <button class="remove-item" onclick="removeFromCart(${item.id})">
+                                <i class="fas fa-trash me-1"></i>Remove Item
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+                cartFooter.style.display = 'block';
+                
+                // Check if student can afford the total and stock is sufficient
+                const stockIssues = cart.some(item => {
+                    const product = products.find(p => p.id === item.id);
+                    return item.quantity > product.stock;
+                });
+                
+                const checkoutBtn = document.getElementById('checkoutBtn');
+                if (totalPrice > currentStudent.balance) {
+                    checkoutBtn.disabled = true;
+                    checkoutBtn.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Insufficient Funds';
+                } else if (stockIssues) {
+                    checkoutBtn.disabled = true;
+                    checkoutBtn.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Stock Issues';
+                } else {
+                    checkoutBtn.disabled = false;
+                    checkoutBtn.innerHTML = '<i class="fas fa-credit-card me-2"></i>Purchase Items';
+                }
+            }
+        }
+
+        function toggleCart() {
+            const sidebar = document.getElementById('cartSidebar');
+            const overlay = document.getElementById('cartOverlay');
+            
+            if (sidebar.classList.contains('open')) {
+                closeCart();
+            } else {
+                sidebar.classList.add('open');
+                overlay.classList.add('show');
+            }
+        }
+
+        function closeCart() {
+            document.getElementById('cartSidebar').classList.remove('open');
+            document.getElementById('cartOverlay').classList.remove('show');
+        }
+
+        function showCartNotification() {
+            const notification = document.createElement('div');
+            notification.className = 'position-fixed bounce-in';
+            notification.style.cssText = `
+                top: 100px;
+                right: 20px;
+                z-index: 3000;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 12px;
+                font-weight: 600;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            `;
+            notification.innerHTML = '<i class="fas fa-check me-2"></i>Added to cart!';
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 2000);
+        }
+
+        function showStockWarning(message) {
+            const warning = document.createElement('div');
+            warning.className = 'position-fixed bounce-in';
+            warning.style.cssText = `
+                top: 100px;
+                right: 20px;
+                z-index: 3000;
+                background: linear-gradient(135deg, #eab308, #ca8a04);
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 12px;
+                font-weight: 600;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            `;
+            warning.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i>${message}`;
+            
+            document.body.appendChild(warning);
+            
+            setTimeout(() => {
+                if (warning.parentNode) {
+                    warning.remove();
+                }
+            }, 3000);
+        }
+
+        // Checkout process
+        function processCheckout() {
+            if (cart.length === 0) return;
+            
+            const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            // Validate funds
+            if (totalPrice > currentStudent.balance) {
+                alert('Insufficient funds to complete this purchase.');
+                return;
+            }
+            
+            // Validate stock availability
+            const stockIssues = [];
+            cart.forEach(cartItem => {
+                const product = products.find(p => p.id === cartItem.id);
+                if (cartItem.quantity > product.stock) {
+                    stockIssues.push(`${cartItem.name}: requested ${cartItem.quantity}, available ${product.stock}`);
+                }
+            });
+            
+            if (stockIssues.length > 0) {
+                alert(`Stock issues found:\n${stockIssues.join('\n')}\n\nPlease adjust quantities and try again.`);
+                updateCartUI(); // Refresh cart display
+                return;
+            }
+            
+            // Process purchase
+            const purchaseData = {
+                id: `TXN${Date.now()}`,
+                type: 'debit',
+                description: 'Tuckshop Purchase',
+                items: [...cart],
+                amount: totalPrice,
+                payment_method: 'Wallet',
+                reference: `TSP${Date.now()}`,
+                status: 'completed',
+                created_at: new Date().toISOString()
+            };
+            
+            // Update student balance
+            currentStudent.balance -= totalPrice;
+            
+            // Update product stock
+            cart.forEach(cartItem => {
+                const product = products.find(p => p.id === cartItem.id);
+                if (product) {
+                    product.stock -= cartItem.quantity;
+                }
+            });
+            
+            // Save transaction
+            let transactions = JSON.parse(sessionStorage.getItem(`transactions_${currentStudent.id}`)) || [];
+            transactions.unshift(purchaseData);
+            sessionStorage.setItem(`transactions_${currentStudent.id}`, JSON.stringify(transactions));
+            
+            // Update session data
+            sessionStorage.setItem('currentStudent', JSON.stringify(currentStudent));
+            
+            // Show receipt
+            showReceipt(purchaseData);
+            
+            // Clear cart and update UI
+            cart = [];
+            updateCartUI();
+            updateUI();
+            closeCart();
+            
+            // Show success message
+            showSuccessMessage('Purchase completed successfully!');
+        }
+
+        function showReceipt(purchaseData) {
+            const receiptContent = document.getElementById('receiptContent');
+            
+            receiptContent.innerHTML = `
+                <div class="receipt-header">
+                    <h4 style="color: #10b981; margin-bottom: 0.5rem;">TuckshopKonnect</h4>
+                    <p style="margin: 0; color: rgba(255, 255, 255, 0.8);">Student Purchase Receipt</p>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <p><strong>Student:</strong> ${currentStudent.name}</p>
+                    <p><strong>Student ID:</strong> ${currentStudent.id}</p>
+                    <p><strong>Class:</strong> ${currentStudent.class}</p>
+                    <p><strong>Date:</strong> ${new Date(purchaseData.created_at).toLocaleString()}</p>
+                    <p><strong>Reference:</strong> ${purchaseData.reference}</p>
+                </div>
+                
+                <div style="margin-bottom: 1rem;">
+                    <h6>Items Purchased:</h6>
+                </div>
+                
+                ${purchaseData.items.map(item => `
+                    <div class="receipt-item">
+                        <span>${item.name} x${item.quantity}</span>
+                        <span>₦${(item.price * item.quantity).toLocaleString()}</span>
+                    </div>
+                `).join('')}
+                
+                <div class="receipt-item">
+                    <span><strong>Total Amount:</strong></span>
+                    <span><strong>₦${purchaseData.amount.toLocaleString()}</strong></span>
+                </div>
+                
+                <div style="margin-top: 2rem; text-align: center; color: rgba(255, 255, 255, 0.7);">
+                    <p><small>Thank you for shopping with TuckshopKonnect!</small></p>
+                    <p><small>Remaining Balance: ₦${currentStudent.balance.toLocaleString()}</small></p>
+                </div>
+            `;
+            
+            const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
+            receiptModal.show();
+        }
+
+        function printReceipt() {
+            const receiptContent = document.getElementById('receiptContent').innerHTML;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>TuckshopKonnect Receipt</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; padding: 20px; }
+                        .receipt-header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #10b981; padding-bottom: 10px; }
+                        .receipt-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #eee; }
+                        .receipt-item:last-child { border-bottom: none; font-weight: bold; margin-top: 10px; padding-top: 10px; border-top: 2px solid #10b981; }
+                    </style>
+                </head>
+                <body>${receiptContent}</body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        function showSuccessMessage(message) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed bounce-in';
+            alertDiv.style.cssText = `
+                top: 100px;
+                right: 20px;
+                z-index: 3000;
+                min-width: 300px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                border: none;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+            `;
+            
+            alertDiv.innerHTML = `
+                <i class="fas fa-check-circle me-2"></i>${message}
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+
+        function showTransactionHistory() {
+            const transactions = JSON.parse(sessionStorage.getItem(`transactions_${currentStudent.id}`)) || [];
+            
+            if (transactions.length === 0) {
+                alert('No transaction history found.');
+                return;
+            }
+            
+            let historyHTML = `
+                <div style="color: white;">
+                    <h5 style="color: #10b981; margin-bottom: 1rem;">Transaction History</h5>
+                    <p style="margin-bottom: 2rem; color: rgba(255, 255, 255, 0.8);">
+                        ${currentStudent.name} - ${currentStudent.id}
+                    </p>
+            `;
+            
+            transactions.forEach(transaction => {
+                const date = new Date(transaction.created_at).toLocaleDateString('en-NG');
+                const time = new Date(transaction.created_at).toLocaleTimeString('en-NG');
+                
+                historyHTML += `
+                    <div style="background: rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 1rem; margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <strong>${transaction.description}</strong>
+                            <span style="color: ${transaction.type === 'credit' ? '#10b981' : '#ef4444'};">
+                                ${transaction.type === 'credit' ? '+' : '-'}₦${transaction.amount.toLocaleString()}
+                            </span>
+                        </div>
+                        <div style="font-size: 0.9rem; color: rgba(255, 255, 255, 0.7);">
+                            <div>${date} at ${time}</div>
+                            <div>Reference: ${transaction.reference}</div>
+                            ${transaction.items ? `<div>Items: ${transaction.items.map(item => `${item.name} x${item.quantity}`).join(', ')}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            historyHTML += '</div>';
+            
+            const historyModal = document.createElement('div');
+            historyModal.className = 'modal fade';
+            historyModal.innerHTML = `
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" style="color: white;">
+                                <i class="fas fa-history me-2"></i>Transaction History
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
+                            ${historyHTML}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(historyModal);
+            const modal = new bootstrap.Modal(historyModal);
+            modal.show();
+            
+            historyModal.addEventListener('hidden.bs.modal', () => {
+                historyModal.remove();
+            });
+        }
+
+        // Activity tracking for session management
+        function trackActivity() {
+            ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'].forEach(event => {
+                document.addEventListener(event, resetSessionTimer, true);
+            });
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!loadStudentData()) {
+                return;
+            }
+            
+            startSession();
+            trackActivity();
+            
+            // Close cart when clicking outside
+            document.addEventListener('click', function(event) {
+                const sidebar = document.getElementById('cartSidebar');
+                const cartBtn = document.querySelector('.cart-btn');
+                
+                if (sidebar.classList.contains('open') && 
+                    !sidebar.contains(event.target) && 
+                    !cartBtn.contains(event.target)) {
+                    closeCart();
+                }
+            });
+            
+            console.log('Enhanced Student tuckshop initialized successfully');
+        });
+
+        // Auto-save cart to session storage
+        setInterval(() => {
+            if (cart.length > 0 && currentStudent) {
+                sessionStorage.setItem(`cart_${currentStudent.id}`, JSON.stringify(cart));
+            }
+        }, 5000);
+
+        // Load saved cart on page load
+        window.addEventListener('load', function() {
+            if (currentStudent) {
+                const savedCart = sessionStorage.getItem(`cart_${currentStudent.id}`);
+                if (savedCart) {
+                    try {
+                        cart = JSON.parse(savedCart);
+                        updateCartUI();
+                    } catch (error) {
+                        console.error('Error loading saved cart:', error);
+                    }
+                }
+            }
+        });
+
+        // Prevent back button after logout
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+    </script>
+</body>
+</html>
