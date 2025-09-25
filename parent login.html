@@ -226,6 +226,62 @@ body {
 }
 
 /* Student Login Portal at Bottom */
+        .parent-login-link.fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: none;
+    border: none;
+    padding: 0;
+    z-index: 1000;
+    margin: 0;
+}
+
+.parent-login-link.fab a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.2rem;
+    box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.parent-login-link.fab a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.parent-login-link.fab a:hover {
+    transform: scale(1.1) translateY(-5px);
+    box-shadow: 0 20px 40px rgba(99, 102, 241, 0.6);
+}
+
+.parent-login-link.fab a:hover::before {
+    opacity: 1;
+}
+
+.parent-login-link.fab a:active {
+    transform: scale(0.95);
+}
 .parent-login-link.bottom-bar {
     position: fixed;
     bottom: 0;
@@ -665,6 +721,7 @@ body {
     </script>
 </body>
 </html>
+
 
 
 
