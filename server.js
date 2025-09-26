@@ -1,0 +1,46 @@
+const express = require('express');
+const mongoose = require('mongoose');
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+const itemRoutes = require('./routes/itemRoutes');
+const transactionRoutes = require('./routes/transactionRoutes');
+
+const app = express();
+const port = 3000;
+
+// Middleware
+app.use(express.json());
+
+// MongoDB Connection
+// IMPORTANT: Replace "YOUR_MONGODB_CONNECTION_STRING" with your actual MongoDB connection string.
+const mongoURI = 'mongodb+srv://tameem43:1234@tuckshopkonnect.s2zrmm0.mongodb.net/?retryWrites=true&w=majority&appName=TuckshopKonnect';
+
+mongoose.connect(mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}).then(() => {
+  console.log('MongoDB connected successfully');
+}).catch(err => {
+  console.error('MongoDB connection error:', err);
+});
+
+
+app.get('/', (req, res) => {
+  res.send('Hello from the TuckshopKonnect backend!');
+});
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/items', itemRoutes);
+app.use('/api/transactions', transactionRoutes);
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
+app.listen(port, () => {
+  console.log(`Server listening at http://localhost:${port}`);
+});
