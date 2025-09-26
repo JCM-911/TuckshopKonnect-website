@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
@@ -12,13 +13,9 @@ const port = 3000;
 app.use(express.json());
 
 // MongoDB Connection
-// IMPORTANT: Replace "YOUR_MONGODB_CONNECTION_STRING" with your actual MongoDB connection string.
-const mongoURI = 'mongodb+srv://tameem43:1234@tuckshopkonnect.s2zrmm0.mongodb.net/?retryWrites=true&w=majority&appName=TuckshopKonnect';
+const mongoURI = process.env.MONGO_URI;
 
-mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => {
+mongoose.connect(mongoURI).then(() => {
   console.log('MongoDB connected successfully');
 }).catch(err => {
   console.error('MongoDB connection error:', err);

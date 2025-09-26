@@ -1,1 +1,210 @@
-<!DOCTYPE html>\n<!-- ... (HTML structure and CSS remain the same) ... -->\n<body>\n    <!-- ... (Animated background and login wrapper) ... -->\n            <!-- Login Form -->\n            <div class=\"form-section\">\n                <form id=\"loginForm\">\n                    <div class=\"input-container\">\n                        <i class=\"fas fa-id-card input-icon\"></i>\n                        <input type=\"text\" class=\"form-control\" id=\"email\" placeholder=\"Enter your Email\" required>\n                    </div>\n\n                    <div class=\"input-container\">\n                        <i class=\"fas fa-lock input-icon\"></i>\n                        <input type=\"password\" class=\"form-control\" id=\"password\" placeholder=\"Enter Password\" required>\n                    </div>\n\n                    <button type=\"submit\" class=\"login-btn\" id=\"loginBtn\">\n                        <!-- ... (button content) ... -->\n                    </button>\n                </form>\n            </div>\n    <!-- ... (rest of the HTML) ... -->\n\n    <!-- Scripts -->\n    <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js\"></script>\n    <script>\n        document.addEventListener(\'DOMContentLoaded\', function() {\n            // Redirect if already logged in\n            if (sessionStorage.getItem(\'parentToken\')) {\n                window.location.href = \'parent-dashboard.html\';\n            }\n\n            const loginForm = document.getElementById(\'loginForm\');\n            loginForm.addEventListener(\'submit\', handleLogin);\n        });\n\n        async function handleLogin(event) {\n            event.preventDefault();\n            const email = document.getElementById(\'email\').value.trim();\n            const password = document.getElementById(\'password\').value.trim();\n            const loginBtn = document.getElementById(\'loginBtn\');\n\n            setLoading(true);\n\n            try {\n                const response = await fetch(\'/api/auth/login\', {\n                    method: \'POST\',\n                    headers: { \'Content-Type\': \'application/json\' },\n                    body: JSON.stringify({ email, password, role: \'parent\' })\n                });\n\n                const data = await response.json();\n\n                if (!response.ok) {\n                    throw new Error(data.message || \'Login failed\');\n                }\n\n                // Store token and user data\n                sessionStorage.setItem(\'parentToken\', data.token);\n                sessionStorage.setItem(\'currentParent\', JSON.stringify(data.user));\n\n                showSuccessAndRedirect();\n\n            } catch (error) {\n                showError(error.message);\n                setLoading(false);\n            }\n        }\n\n        function setLoading(isLoading) {\n            const loginBtn = document.getElementById(\'loginBtn\');\n            if (isLoading) {\n                loginBtn.disabled = true;\n                loginBtn.innerHTML = `<span class=\"loading-spinner\"><i class=\"fas fa-spinner fa-spin\"></i></span> Authenticating...`;\n            } else {\n                loginBtn.disabled = false;\n                loginBtn.innerHTML = `<i class=\"fas fa-sign-in-alt me-2\"></i> Login to Dashboard`;\n            }\n        }\n\n        function showSuccessAndRedirect() {\n            const loginBtn = document.getElementById(\'loginBtn\');\n            loginBtn.style.background = \'linear-gradient(135deg, #10b981, #34d399)\';\n            loginBtn.innerHTML = \'<i class=\"fas fa-check me-2\"></i> Success! Redirecting...\';\n            setTimeout(() => {\n                window.location.href = \'parent-dashboard.html\';\n            }, 1500);\n        }\n\n        function showError(message) {\n            const errorAlert = document.getElementById(\'errorAlert\');\n            document.getElementById(\'errorMessage\').textContent = message;\n            errorAlert.style.display = \'block\';\n        }\n\n    </script>\n</body>\n</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parent Login - TuckshopKonnect</title>
+    
+    <!-- External CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-blue: #3b82f6;
+            --primary-dark-blue: #1d4ed8;
+            --dark-bg: #0f172a;
+            --slate-800: #1e293b;
+            --glass-bg: rgba(30, 41, 59, 0.8);
+            --glass-border: rgba(148, 163, 184, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--slate-800) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 450px;
+            padding: 3rem;
+            margin: 1rem;
+        }
+
+        .brand-section {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .brand-title {
+            font-weight: 800;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .brand-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group i {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1rem 1rem 1rem 3rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+            outline: none;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark-blue));
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 1rem;
+            border-radius: 12px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .alert {
+            display: none;
+        }
+        
+        .admin-login-link {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .admin-login-link a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .admin-login-link a:hover {
+            color: var(--text-primary);
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="brand-section">
+            <h1 class="brand-title">TuckshopKonnect</h1>
+            <p class="brand-subtitle">Parent Portal</p>
+        </div>
+
+        <div id="errorAlert" class="alert alert-danger">
+            <span id="errorMessage"></span>
+        </div>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" class="form-control" id="email" placeholder="Parent Email" required>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" class="form-control" id="password" placeholder="Password" required>
+            </div>
+
+            <button type="submit" class="login-btn" id="loginBtn">
+                <i class="fas fa-sign-in-alt me-2"></i>Login
+            </button>
+        </form>
+        
+        <div class="admin-login-link mt-4">
+             <a href="index.html">
+                <i class="fas fa-user-shield me-1"></i>
+                Admin Login
+            </a>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // For demonstration, we'll use hardcoded credentials for a parent.
+            // In a real app, this would involve a server call.
+            const dummyParent = {
+                email: 'parent@tuckshop.com',
+                password: 'password',
+                name: 'Jane Doe',
+                role: 'parent'
+            };
+
+            // Store this dummy parent in local storage to simulate a user database
+            if (!localStorage.getItem('parentUser')) {
+                localStorage.setItem('parentUser', JSON.stringify(dummyParent));
+            }
+
+            const loginForm = document.getElementById('loginForm');
+            loginForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const storedParent = JSON.parse(localStorage.getItem('parentUser'));
+                const errorAlert = document.getElementById('errorAlert');
+                const errorMessage = document.getElementById('errorMessage');
+
+                if (email === storedParent.email && password === storedParent.password) {
+                    // On successful login, save session info
+                    sessionStorage.setItem('parentToken', 'dummy-parent-token-' + Date.now());
+                    sessionStorage.setItem('parentUser', JSON.stringify(storedParent));
+                    
+                    // Redirect to the parent dashboard
+                    window.location.href = 'parent-dashboard.html';
+                } else {
+                    errorMessage.textContent = 'Invalid email or password.';
+                    errorAlert.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
