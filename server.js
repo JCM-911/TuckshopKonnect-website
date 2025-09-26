@@ -30,7 +30,7 @@ async function createDefaultAdmin() {
     if (!adminExists) {
       const admin = new User({
         name: 'admin',
-        email: 'admin@tuckshop.com',
+        email: 'admin',
         password: 'admin',
         role: 'admin',
       });

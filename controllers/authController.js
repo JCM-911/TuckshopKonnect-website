@@ -78,7 +78,8 @@ const loginUser = async (req, res) => {
     studentId, 
     email, 
     password, 
-    role
+    role,
+    username
   } = req.body;
 
   // Validate required fields based on role
@@ -88,9 +89,9 @@ const loginUser = async (req, res) => {
     });
   }
 
-  if ((role === 'student' && !studentId) || (role === 'parent' && !email) || (role === 'admin' && !email)) {
+  if ((role === 'student' && !studentId) || (role === 'parent' && !email) || (role === 'admin' && !(email || username))) {
     return res.status(400).json({
-      message: 'Please provide the correct identifier for your role (Student ID or Email)'
+      message: 'Please provide the correct identifier for your role (Student ID, Email, or Username)'
     });
   }
 
@@ -101,7 +102,12 @@ const loginUser = async (req, res) => {
       user = await User.findOne({
         studentId
       });
-    } else {
+    } else if (role === 'admin') {
+        user = await User.findOne({
+        $or: [{ email }, { name: username }]
+      });
+    }
+    else {
       user = await User.findOne({
         email
       });
