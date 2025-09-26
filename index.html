@@ -56,17 +56,73 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 20% 80%, rgba(220, 38, 38, 0.2) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(153, 27, 27, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(15, 23, 42, 0.6) 0%, transparent 50%);
+                radial-gradient(circle at 20% 20%, rgba(220, 38, 38, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(153, 27, 27, 0.2) 0%, transparent 60%),
+                radial-gradient(circle at 60% 10%, rgba(239, 68, 68, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 10% 90%, rgba(185, 28, 28, 0.12) 0%, transparent 45%),
+                linear-gradient(135deg, 
+                    rgba(15, 23, 42, 0.95) 0%, 
+                    rgba(30, 41, 59, 0.9) 25%, 
+                    rgba(51, 65, 85, 0.85) 50%, 
+                    rgba(71, 85, 105, 0.8) 75%, 
+                    rgba(100, 116, 139, 0.75) 100%
+                );
             z-index: -1;
-            animation: darkPulse 25s ease-in-out infinite;
+            animation: subtleFloat 20s ease-in-out infinite;
         }
 
-        @keyframes darkPulse {
-            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
-            33% { transform: translate(-20px, 20px) rotate(120deg) scale(1.1); }
-            66% { transform: translate(20px, -10px) rotate(240deg) scale(0.9); }
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    0deg, 
+                    transparent, 
+                    transparent 100px, 
+                    rgba(220, 38, 38, 0.03) 101px, 
+                    rgba(220, 38, 38, 0.03) 102px
+                ),
+                repeating-linear-gradient(
+                    90deg, 
+                    transparent, 
+                    transparent 100px, 
+                    rgba(153, 27, 27, 0.02) 101px, 
+                    rgba(153, 27, 27, 0.02) 102px
+                );
+            z-index: -1;
+            opacity: 0.4;
+            animation: gridShift 40s linear infinite;
+        }
+
+        @keyframes subtleFloat {
+            0%, 100% { 
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            25% { 
+                transform: translate(-5px, 5px) scale(1.01);
+                opacity: 0.95;
+            }
+            50% { 
+                transform: translate(5px, -10px) scale(0.99);
+                opacity: 0.9;
+            }
+            75% { 
+                transform: translate(10px, 5px) scale(1.005);
+                opacity: 0.98;
+            }
+        }
+
+        @keyframes gridShift {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-10px, 10px); }
+            50% { transform: translate(10px, -5px); }
+            75% { transform: translate(-5px, -10px); }
+            100% { transform: translate(0, 0); }
         }
 
         .login-container {
@@ -256,26 +312,30 @@
 
         .input-group i {
             position: absolute;
-            left: 1.25rem;
+            right: 1.25rem;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
             z-index: 3;
             transition: all 0.3s ease;
             font-size: 1.1rem;
+            pointer-events: none;
         }
 
         .form-control {
             background: rgba(255, 255, 255, 0.08);
             border: 2px solid rgba(148, 163, 184, 0.15);
             border-radius: 16px;
-            padding: 1.25rem 1.5rem 1.25rem 3.5rem;
+            padding: 1.25rem 3.5rem 1.25rem 1.5rem;
             color: var(--text-primary);
             font-size: 1rem;
             font-weight: 500;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             margin-bottom: 0;
             backdrop-filter: blur(10px);
+            pointer-events: auto !important;
+            z-index: 100 !important;
+            position: relative !important;
         }
 
         .form-control:focus {
@@ -291,6 +351,7 @@
 
         .form-control:focus + i {
             color: var(--accent-red);
+            transform: translateY(-50%) scale(1.1);
         }
 
         .form-control::placeholder {
@@ -831,7 +892,7 @@
 
             trackActivity();
             
-            // Handle form submission
+            // Handle form submission - use the original function without override
             document.getElementById('loginForm').addEventListener('submit', handleLogin);
             
             // Auto-focus on username input with delay
@@ -848,22 +909,59 @@
                 // Add input validation feedback
                 input.addEventListener('blur', function() {
                     if (this.value.trim()) {
-                        this.style.borderColor = 'rgba(16, 185, 129, 0.5)';
+                        this.style.borderColor = 'rgba(148, 163, 184, 0.4)';
                     } else {
                         this.style.borderColor = 'rgba(148, 163, 184, 0.15)';
                     }
                 });
                 
-                // Real-time validation
+                // Real-time validation - allow typing in both fields
                 input.addEventListener('input', function() {
-                    if (this.value.trim().length >= 3) {
-                        this.style.borderColor = 'rgba(16, 185, 129, 0.5)';
-                    }
+                    this.style.borderColor = 'rgba(148, 163, 184, 0.4)';
                 });
+                
+                // Ensure all inputs are always enabled and focusable
+                input.disabled = false;
+                input.readOnly = false;
+                input.style.pointerEvents = 'auto';
             });
 
             // Clear password field on page load for security
             document.getElementById('password').value = '';
+            
+            // Ensure both inputs are always functional
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            
+            // Force inputs to be always accessible
+            [usernameInput, passwordInput].forEach(input => {
+                input.style.pointerEvents = 'auto';
+                input.style.zIndex = '100';
+                input.disabled = false;
+                input.readOnly = false;
+                
+                // Remove any event listeners that might block input
+                input.onclick = function(e) {
+                    e.stopPropagation();
+                    this.focus();
+                };
+                
+                input.onfocus = function(e) {
+                    e.stopPropagation();
+                };
+                
+                input.onkeydown = function(e) {
+                    e.stopPropagation();
+                };
+                
+                input.onkeyup = function(e) {
+                    e.stopPropagation();
+                };
+                
+                input.oninput = function(e) {
+                    e.stopPropagation();
+                };
+            });
             
             // Add security feature interactions
             const securityItems = document.querySelectorAll('.security-item');
@@ -967,24 +1065,6 @@
             }
         }
 
-        // Override the original handleLogin to include attempt tracking
-        const originalHandleLogin = handleLogin;
-        handleLogin = function(event) {
-            const result = originalHandleLogin(event);
-            
-            // Track failed attempts
-            if (event.defaultPrevented) return;
-            
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
-            
-            if (username && password && username !== adminCredentials.username || password !== adminCredentials.password) {
-                trackFailedAttempt();
-            }
-            
-            return result;
-        };
-
         // Add window focus/blur tracking for security
         window.addEventListener('blur', function() {
             console.log('Admin window lost focus at:', new Date().toISOString());
@@ -999,7 +1079,11 @@
             return false;
         };
 
-        document.onmousedown = function() {
+        document.onmousedown = function(e) {
+            // Allow mousedown on form inputs
+            if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON')) {
+                return true;
+            }
             return false;
         };
 
