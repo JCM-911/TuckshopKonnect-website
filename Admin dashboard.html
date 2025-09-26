@@ -1,1 +1,283 @@
-<!DOCTYPE html>\n<!-- ... (HTML structure remains the same) ... -->\n\n    <!-- Scripts -->\n    <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js\"></script>\n    <script src=\"https://cdn.jsdelivr.net/npm/chart.js\"></script>\n    \n    <script>\n        // Global state\n        let allUsers = [];\n        let allTransactions = [];\n        let allItems = [];\n        let currentUser = null; \n\n        // Session and Auth\n        document.addEventListener(\'DOMContentLoaded\', function() {\n            const token = sessionStorage.getItem(\'adminToken\');\n            currentUser = JSON.parse(sessionStorage.getItem(\'adminUser\'));\n\n            if (!token || !currentUser || currentUser.role !== \'admin\') {\n                sessionStorage.clear();\n                window.location.href = \'adminlogin.html\';\n                return;\n            }\n\n            setupAdminUI();\n            showSection(\'dashboard\');\n            addEventListeners();\n        });\n\n        function getAuthHeader() {\n            return { \'Authorization\': `Bearer ${sessionStorage.getItem(\'adminToken\')}` };\n        }\n\n        function setupAdminUI() {\n            document.getElementById(\'adminName\').textContent = currentUser.name || \'Administrator\';\n            document.getElementById(\'adminInitials\').textContent = (currentUser.name || \'A\').charAt(0).toUpperCase();\n        }\n\n        function logout() {\n            if (confirm(\'Are you sure you want to logout?\')) {\n                sessionStorage.clear();\n                window.location.href = \'adminlogin.html\';\n            }\n        }\n\n        // Navigation\n        function addEventListeners() {\n            document.querySelectorAll(\'.nav-link\').forEach(link => {\n                link.addEventListener(\'click\', function(e) {\n                    e.preventDefault();\n                    showSection(this.getAttribute(\'data-section\'));\n                });\n            });\n        }\n\n        async function showSection(sectionName) {\n            document.querySelectorAll(\'.section.active\').forEach(s => s.classList.remove(\'active\'));\n            document.getElementById(sectionName).classList.add(\'active\');\n\n            document.querySelectorAll(\'.nav-link.active\').forEach(l => l.classList.remove(\'active\'));\n            document.querySelector(`.nav-link[data-section=\"${sectionName}\"]`).classList.add(\'active\');\n            \n            document.getElementById(\'pageTitle\').textContent = document.querySelector(`.nav-link[data-section=\"${sectionName}\"] span`).textContent;\n\n            // Load data for the visible section\n            switch(sectionName) {\n                case \'dashboard\': await loadDashboardData(); break;\n                case \'parents\': await loadUsersData(\'parent\'); break;\n                case \'students\': await loadUsersData(\'student\'); break;\n                case \'items\': await loadItemsData(); break;\n                case \'transactions\': await loadTransactionsData(); break;\n                case \'reports\': initializeCharts(); break;\n            }\n        }\n\n        // Data Loading\n        async function loadDashboardData() {\n            await Promise.all([\n                loadUsersData(),\n                loadTransactionsData()\n            ]);\n            updateDashboardStats();\n        }\n\n        async function loadUsersData(role = null) {\n            try {\n                const url = role ? `/api/users?role=${role}` : \'/api/users\';\n                const res = await fetch(url, { headers: getAuthHeader() });\n                if (!res.ok) throw new Error(\'Failed to fetch users\');\n                \n                if (role) {\n                    const data = await res.json();\n                    if (role === \'parent\') renderParentsTable(data);\n                    if (role === \'student\') renderStudentsTable(data);\n                } else {\n                    allUsers = await res.json(); // For dashboard stats\n                }\n\n            } catch (error) {\n                showAlert(error.message, \'danger\');\n            }\n        }\n\n        async function loadItemsData() {\n            // Previously implemented item management logic\n        }\n\n        async function loadTransactionsData() {\n            try {\n                const res = await fetch(\'/api/transactions/all\', { headers: getAuthHeader() });\n                if (!res.ok) throw new Error(\'Failed to fetch transactions\');\n                allTransactions = await res.json();\n                renderTransactionsTable(allTransactions);\n            } catch (error) {\n                 showAlert(error.message, \'danger\');\n            }\n        }\n\n        // UI Rendering\n        function renderParentsTable(parents) {\n            const tbody = document.getElementById(\'parentsTable\');\n            tbody.innerHTML = \'\';\n            parents.forEach(p => {\n                const totalBalance = (p.children || []).reduce((acc, s) => acc + s.balance, 0);\n                tbody.innerHTML += `\n                    <tr>\n                        <td>${p.parentId}</td>\n                        <td>${p.name}</td>\n                        <td>${p.children.length}</td>\n                        <td>₦${totalBalance.toLocaleString()}</td>\n                        <td><span class=\"badge bg-success\">Active</span></td>\n                        <td>\n                           <button class=\"btn btn-info btn-sm\" onclick=\"openParentModal(\'${p._id}\')\">Edit</button>\n                           <button class=\"btn btn-danger btn-sm\" onclick=\"deleteUser(\'${p._id}\', \'parent\')\">Delete</button>\n                        </td>\n                    </tr>`;\n            });\n        }\n\n        function renderStudentsTable(students) {\n            const tbody = document.getElementById(\'studentsTable\');\n            tbody.innerHTML = \'\';\n            students.forEach(s => {\n                tbody.innerHTML += `\n                    <tr>\n                        <td>${s.studentId}</td>\n                        <td>${s.name}</td>\n                        <td>${s.class}</td>\n                        <td>₦${s.balance.toLocaleString()}</td>\n                        <td>${s.parent ? s.parent.name : \'N/A\'}</td>\n                        <td><span class=\"badge bg-success\">Active</span></td>\n                        <td>\n                           <button class=\"btn btn-info btn-sm\" onclick=\"openStudentModal(\'${s._id}\')\">Edit</button>\n                           <button class=\"btn btn-warning btn-sm\" onclick=\"openTopupModal(\'${s._id}\')\">Top-up</button>\n                           <button class=\"btn btn-danger btn-sm\" onclick=\"deleteUser(\'${s._id}\', \'student\')\">Delete</button>\n                        </td>\n                    </tr>`;\n            });\n        }\n\n        function renderTransactionsTable(transactions) {\n            // ... transaction rendering logic ...\n        }\n\n        function updateDashboardStats() {\n            const parents = allUsers.filter(u => u.role === \'parent\');\n            const students = allUsers.filter(u => u.role === \'student\');\n            const totalBalance = students.reduce((acc, s) => acc + s.balance, 0);\n            const lowBalanceCount = students.filter(s => s.balance < 500).length;\n\n            document.getElementById(\'totalParents\').textContent = parents.length;\n            document.getElementById(\'totalStudents\').textContent = students.length;\n            document.getElementById(\'totalBalance\').textContent = `₦${totalBalance.toLocaleString()}`;\n            document.getElementById(\'lowBalanceCount\').textContent = lowBalanceCount;\n        }\n\n        // User Management Modals & Actions\n        function openParentModal(id = null) {\n            // ... Logic to show/hide modal, populate with data if (id) for editing\n            new bootstrap.Modal(document.getElementById(\'parentModal\')).show();\n        }\n        \n        function openStudentModal(id = null) {\n            // ... Logic to show/hide modal, populate with data if (id) for editing\n             new bootstrap.Modal(document.getElementById(\'studentModal\')).show();\n        }\n\n        async function saveUser(event, role) {\n            event.preventDefault();\n            const form = event.target;\n            const id = form.querySelector(\'input[type=hidden]\').value;\n            const url = id ? `/api/users/${id}` : \'/api/users\';\n            const method = id ? \'PUT\' : \'POST\';\n\n            const body = {\n                role: role,\n                name: form.querySelector(\`#${role}Name\`).value,\n                // ... get other form fields ...\n            };\n\n            try {\n                const res = await fetch(url, {\n                    method,\n                    headers: { ...getAuthHeader(), \'Content-Type\': \'application/json\' },\n                    body: JSON.stringify(body)\n                });\n                if (!res.ok) throw new Error(await res.text());\n                showAlert(`Successfully saved ${role}.`, \'success\');\n                bootstrap.Modal.getInstance(form.closest(\'.modal\')).hide();\n                loadUsersData(role);\n                loadDashboardData(); // Refresh stats\n            } catch (error) {\n                showAlert(`Error: ${error.message}`, \'danger\');\n            }\n        }\n\n        async function deleteUser(id, role) {\n            if (!confirm(`Are you sure you want to delete this ${role}?`)) return;\n            try {\n                const res = await fetch(`/api/users/${id}`, { method: \'DELETE\', headers: getAuth-header() });\n                if (!res.ok) throw new Error(\'Failed to delete user\');\n                showAlert(\'User deleted successfully\', \'success\');\n                loadUsersData(role);\n                loadDashboardData(); // Refresh stats\n            } catch (error) {\n                showAlert(error.message, \'danger\');\n            }\n        }\n        \n        async function processTopup(event) {\n             event.preventDefault();\n             // ... topup logic using POST /api/transactions/topup ...\n        }\n\n        // ... (rest of the functions: top-up, alerts, charts, etc., adapted for API calls) ...\n\n    </script>\n</body>\n</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - TuckshopKonnect</title>
+    
+    <!-- External CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-red: #dc2626;
+            --primary-dark-red: #991b1b;
+            --dark-bg: #0f172a;
+            --slate-800: #1e293b;
+            --slate-700: #334155;
+            --glass-bg: rgba(30, 41, 59, 0.8);
+            --glass-border: rgba(148, 163, 184, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-secondary);
+            display: flex;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--slate-800);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .sidebar-header .brand-title {
+            color: var(--text-primary);
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+
+        .main-nav {
+            flex-grow: 1;
+            padding: 1rem 0;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.9rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: var(--glass-bg);
+            color: var(--text-primary);
+            border-left-color: var(--primary-red);
+        }
+
+        .nav-link i {
+            margin-right: 1rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--glass-border);
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            width: calc(100% - 280px);
+            padding: 2rem;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: var(--slate-800);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+        }
+        
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .admin-initials {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-red);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .section {
+            display: none;
+        }
+        .section.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--slate-800);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+        .card-header {
+             background: var(--glass-bg);
+             border-bottom: 1px solid var(--glass-border);
+        }
+        .card-body {
+            padding: 1.5rem;
+        }
+        .table {
+            color: var(--text-secondary);
+        }
+        .table th {
+             color: var(--text-primary);
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1 class="brand-title">TuckshopKonnect</h1>
+        </div>
+        <nav class="main-nav">
+            <a href="#" class="nav-link active" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> <span>Dashboard</span></a>
+            <a href="#" class="nav-link" data-section="parents"><i class="fas fa-users"></i> <span>Parents</span></a>
+            <a href="#" class="nav-link" data-section="students"><i class="fas fa-user-graduate"></i> <span>Students</span></a>
+            <a href="#" class="nav-link" data-section="items"><i class="fas fa-box"></i> <span>Shop Items</span></a>
+            <a href="#" class="nav-link" data-section="transactions"><i class="fas fa-history"></i> <span>Transactions</span></a>
+            <a href="#" class="nav-link" data-section="reports"><i class="fas fa-chart-line"></i> <span>Reports</span></a>
+        </nav>
+        <div class="sidebar-footer">
+            <button class="btn btn-danger w-100" onclick="logout()">
+                <i class="fas fa-sign-out-alt me-2"></i> Logout
+            </button>
+        </div>
+    </div>
+
+    <main class="main-content">
+        <header class="header">
+            <h2 id="pageTitle" class="page-title">Dashboard</h2>
+            <div class="admin-profile">
+                <div id="adminName" class="text-white fw-bold">Administrator</div>
+                <div id="adminInitials" class="admin-initials">A</div>
+            </div>
+        </header>
+
+        <div id="dashboard" class="section active">
+            <!-- Dashboard content will go here -->
+            <h3>Welcome to the Admin Dashboard</h3>
+        </div>
+        <div id="parents" class="section">
+             <h3>Parent Management</h3>
+        </div>
+        <div id="students" class="section">
+             <h3>Student Management</h3>
+        </div>
+        <div id="items" class="section">
+             <h3>Shop Item Management</h3>
+        </div>
+        <div id="transactions" class="section">
+             <h3>Transaction History</h3>
+        </div>
+        <div id="reports" class="section">
+             <h3>Financial Reports</h3>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = sessionStorage.getItem('adminToken');
+            const userString = sessionStorage.getItem('adminUser');
+            
+            if (!token || !userString) {
+                // If no token or user, redirect to login
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const currentUser = JSON.parse(userString);
+
+            if (currentUser.role !== 'admin') {
+                // If user is not admin, clear session and redirect
+                sessionStorage.clear();
+                window.location.href = 'index.html';
+                return;
+            }
+
+            setupAdminUI(currentUser);
+            showSection('dashboard'); // Show default section
+            addEventListeners();
+        });
+
+        function setupAdminUI(user) {
+            document.getElementById('adminName').textContent = user.name || 'Administrator';
+            document.getElementById('adminInitials').textContent = (user.name || 'A').charAt(0).toUpperCase();
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.clear();
+                window.location.href = 'index.html';
+            }
+        }
+
+        function addEventListeners() {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionName = this.getAttribute('data-section');
+                    showSection(sectionName);
+                });
+            });
+        }
+
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            
+            // Show the target section
+            const targetSection = document.getElementById(sectionName);
+            if(targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            // Update nav link active state
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            document.querySelector(`.nav-link[data-section="` + sectionName + `"]`).classList.add('active');
+            
+            // Update the page title
+            const pageTitle = document.querySelector(`.nav-link[data-section="` + sectionName + `"] span`).textContent;
+            document.getElementById('pageTitle').textContent = pageTitle;
+        }
+    </script>
+</body>
+</html>
