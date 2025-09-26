@@ -8,317 +8,553 @@
     <!-- External CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-</head>
-<body>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <style>
-* {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             min-height: 100vh;
-            color: #1f2937;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background elements */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            backdrop-filter: blur(10px);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-shape:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 10%;
+            left: 10%;
+            animation-delay: -0.5s;
+        }
+
+        .floating-shape:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 70%;
+            right: 10%;
+            animation-delay: -2s;
+        }
+
+        .floating-shape:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            top: 20%;
+            right: 20%;
+            animation-delay: -3.5s;
+        }
+
+        .floating-shape:nth-child(4) {
+            width: 100px;
+            height: 100px;
+            bottom: 20%;
+            left: 5%;
+            animation-delay: -1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(120deg); }
+            66% { transform: translateY(10px) rotate(240deg); }
+        }
+
+        .main-container {
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 2rem;
         }
 
-        .login-container {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        .login-wrapper {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(25px);
+            border-radius: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
             width: 100%;
-            max-width: 450px;
-            padding: 3rem;
-            margin: 2rem;
+            max-width: 480px;
+            padding: 3.5rem;
+            position: relative;
+            overflow: hidden;
         }
 
+        .login-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        }
+
+        /* Brand Section */
         .brand-section {
             text-align: center;
-            margin-bottom: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .brand-icon-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2rem;
         }
 
         .brand-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1);
+            background-size: 300% 300%;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1.5rem;
-            font-size: 2.5rem;
+            font-size: 3rem;
             color: white;
-            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+            box-shadow: 
+                0 20px 40px rgba(255, 107, 107, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            animation: gradientShift 4s ease-in-out infinite, pulse 2s ease-in-out infinite;
+            position: relative;
+        }
+
+        .brand-icon::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1);
+            background-size: 300% 300%;
+            border-radius: 50%;
+            z-index: -1;
+            animation: gradientShift 4s ease-in-out infinite;
+            filter: blur(8px);
+            opacity: 0.7;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .brand-title {
             color: white;
-            font-weight: 800;
-            font-size: 2rem;
+            font-weight: 900;
+            font-size: 2.2rem;
             margin-bottom: 0.5rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            letter-spacing: -0.5px;
         }
 
         .brand-subtitle {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.85);
             font-weight: 500;
+            font-size: 1.1rem;
         }
 
-        .login-form {
-            margin-top: 2rem;
+        /* Form Styles */
+        .form-section {
+            margin-bottom: 2rem;
         }
 
-        .form-label {
-            color: white;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-        }
-
-        .form-control {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            padding: 1rem 1.25rem;
-            color: white;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-control:focus {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: #6366f1;
-            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
-            outline: none;
-            color: white;
-        }
-
-        .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .input-group {
+        .input-container {
             position: relative;
             margin-bottom: 1.5rem;
         }
 
-        .input-group i {
+        .input-container .form-control {
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 1.2rem 1.5rem 1.2rem 3.5rem;
+            color: white;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .input-container .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #4ecdc4;
+            box-shadow: 
+                0 0 0 4px rgba(78, 205, 196, 0.15),
+                0 8px 32px rgba(78, 205, 196, 0.3);
+            outline: none;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .input-container .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        .input-container .form-control:focus::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+            transform: translateX(5px);
+        }
+
+        .input-icon {
             position: absolute;
-            left: 1rem;
+            left: 1.2rem;
             top: 50%;
             transform: translateY(-50%);
             color: rgba(255, 255, 255, 0.7);
-            z-index: 3;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            z-index: 2;
         }
 
-        .input-group .form-control {
-            padding-left: 3rem;
-            margin-bottom: 0;
+        .input-container:focus-within .input-icon {
+            color: #4ecdc4;
+            transform: translateY(-50%) scale(1.1);
         }
 
+        /* Login Button */
         .login-btn {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
             border: none;
             color: white;
             font-weight: 700;
-            padding: 1rem 2rem;
-            border-radius: 12px;
+            padding: 1.2rem 2rem;
+            border-radius: 16px;
             font-size: 1.1rem;
-            transition: all 0.3s ease;
             width: 100%;
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 12px 32px rgba(255, 107, 107, 0.3);
+        }
+
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: all 0.6s ease;
         }
 
         .login-btn:hover {
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 20px 48px rgba(255, 107, 107, 0.4);
             color: white;
         }
 
+        .login-btn:hover::before {
+            left: 100%;
+        }
+
+        .login-btn:active {
+            transform: translateY(-1px) scale(1.01);
+        }
+
         .login-btn:disabled {
-            opacity: 0.6;
+            opacity: 0.7;
             cursor: not-allowed;
             transform: none;
         }
 
-        .alert {
+        /* Error Alert */
+        .alert-modern {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.3);
             color: #fecaca;
-            border-radius: 12px;
-            padding: 1rem;
+            border-radius: 16px;
+            padding: 1rem 1.5rem;
             margin-bottom: 1.5rem;
             font-weight: 500;
+            backdrop-filter: blur(10px);
+            animation: shake 0.5s ease-in-out;
         }
 
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Demo Section */
         .demo-section {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            margin-top: 2.5rem;
+            padding-top: 2.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .demo-title {
-            color: white;
+            color: rgba(255, 255, 255, 0.9);
             font-weight: 600;
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
 
         .demo-accounts {
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 1rem;
-            max-height: 200px;
+            border-radius: 20px;
+            padding: 1.2rem;
+            max-height: 220px;
             overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .demo-accounts::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .demo-accounts::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .demo-accounts::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
         }
 
         .demo-account {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.5rem;
-            margin-bottom: 0.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .demo-account:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateX(3px);
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
-        .demo-account-info {
-            flex: 1;
+        .demo-account:last-child {
+            margin-bottom: 0;
         }
 
         .demo-parent-name {
             color: white;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 0.9rem;
+            margin-bottom: 2px;
         }
 
         .demo-parent-id {
             color: rgba(255, 255, 255, 0.7);
             font-size: 0.8rem;
+            font-weight: 500;
         }
 
         .demo-children {
             color: rgba(255, 255, 255, 0.6);
             font-size: 0.8rem;
             text-align: right;
+            font-weight: 500;
         }
 
+        /* Student Login Link */
+        .student-login-link {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .student-login-link a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .student-login-link a:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        /* Loading Animation */
         .loading-spinner {
             display: none;
             margin-right: 0.5rem;
         }
 
-        /* Animations */
-        .fade-in {
-            animation: fadeIn 0.8s ease-out;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-                .parent-login-link {
-            text-align: center;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        .fa-spin {
+            animation: spin 1s linear infinite;
         }
 
-        .parent-login-link a {
-            color: #94a3b8;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-
-        .parent-login-link a:hover {
-            color: #e2e8f0;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Responsive */
+        /* Responsive Design */
         @media (max-width: 768px) {
-            .login-container {
-                margin: 1rem;
-                padding: 2rem;
+            .main-container {
+                padding: 1rem;
+            }
+            
+            .login-wrapper {
+                padding: 2.5rem 2rem;
+                border-radius: 24px;
             }
             
             .brand-title {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
+            }
+
+            .brand-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 2.5rem;
             }
         }
-</style>
 
+        @media (max-width: 480px) {
+            .login-wrapper {
+                padding: 2rem 1.5rem;
+            }
+
+            .brand-title {
+                font-size: 1.6rem;
+            }
+        }
+
+        /* Entrance Animation */
+        .fade-in {
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <div class="login-container fade-in">
-        <!-- Brand Section -->
-        <div class="brand-section">
-            <div class="brand-icon">
-                <i class="fas fa-store"></i>
-            </div>
-            <h1 class="brand-title">TuckshopKonnect</h1>
-            <p class="brand-subtitle">Parent Login Portal</p>
-        </div>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+        <div class="floating-shape"></div>
+    </div>
 
-        <!-- Error Alert -->
-        <div id="errorAlert" class="alert" style="display: none;">
-            <i class="fas fa-exclamation-circle me-2"></i>
-            <span id="errorMessage">Invalid Parent ID or Password</span>
-        </div>
-
-        <!-- Login Form -->
-        <form class="login-form" id="loginForm">
-            <div class="input-group">
-                <i class="fas fa-id-card"></i>
-                <input type="text" class="form-control" id="parentId" placeholder="Enter Parent ID (e.g., PAR001)" required>
+    <div class="main-container">
+        <div class="login-wrapper fade-in">
+            <!-- Brand Section -->
+            <div class="brand-section">
+                <div class="brand-icon-container">
+                    <div class="brand-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                </div>
+                <h1 class="brand-title">TuckshopKonnect</h1>
+                <p class="brand-subtitle">Parent Login Portal</p>
             </div>
 
-            <div class="input-group">
-                <i class="fas fa-lock"></i>
-                <input type="password" class="form-control" id="password" placeholder="Enter Password" required>
+            <!-- Error Alert -->
+            <div id="errorAlert" class="alert-modern" style="display: none;">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <span id="errorMessage">Invalid Parent ID or Password</span>
             </div>
 
-            <button type="submit" class="login-btn" id="loginBtn">
-                <span class="loading-spinner">
-                    <i class="fas fa-spinner fa-spin"></i>
-                </span>
-                <i class="fas fa-sign-in-alt me-2"></i>
-                Login to Dashboard
-            </button>
-        </form>
+            <!-- Login Form -->
+            <div class="form-section">
+                <form id="loginForm">
+                    <div class="input-container">
+                        <i class="fas fa-id-card input-icon"></i>
+                        <input type="text" class="form-control" id="parentId" placeholder="Enter Parent ID (e.g., PAR001)" required>
+                    </div>
 
-        <!-- Demo Accounts Section -->
-        <div class="demo-section">
-            <p class="demo-title">Demo Accounts (Click to use)</p>
-            <div class="demo-accounts" id="demoAccounts">
-                <!-- Demo accounts will be populated here -->
+                    <div class="input-container">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" class="form-control" id="password" placeholder="Enter Password" required>
+                    </div>
+
+                    <button type="submit" class="login-btn" id="loginBtn">
+                        <span class="loading-spinner">
+                            <i class="fas fa-spinner fa-spin"></i>
+                        </span>
+                        <i class="fas fa-sign-in-alt me-2"></i>
+                        Login to Dashboard
+                    </button>
+                </form>
+            </div>
+
+            <!-- Demo Accounts Section -->
+            <div class="demo-section">
+                <p class="demo-title">
+                    <i class="fas fa-users me-2"></i>
+                    Demo Accounts (Click to use)
+                </p>
+                <div class="demo-accounts" id="demoAccounts">
+                    <!-- Demo accounts will be populated here -->
+                </div>
+            </div>
+
+            <!-- Student Login Link -->
+            <div class="student-login-link">
+                <a href="student-login.html">
+                    <i class="fas fa-graduation-cap"></i>
+                    Student Login Portal
+                </a>
             </div>
         </div>
     </div>
-            <div class="parent-login-link">
-            <a href="student-login.html">
-                <i class="fas fa-users me-1"></i>
-                Student Login Portal
-            </a>
-        </div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -478,6 +714,18 @@
         function useDemoAccount(parentId, password) {
             document.getElementById('parentId').value = parentId;
             document.getElementById('password').value = password;
+            
+            // Add a subtle animation to indicate the fields were filled
+            const parentInput = document.getElementById('parentId');
+            const passwordInput = document.getElementById('password');
+            
+            parentInput.style.transform = 'scale(1.05)';
+            passwordInput.style.transform = 'scale(1.05)';
+            
+            setTimeout(() => {
+                parentInput.style.transform = '';
+                passwordInput.style.transform = '';
+            }, 200);
         }
 
         function showError(message) {
@@ -485,6 +733,9 @@
             const errorMessage = document.getElementById('errorMessage');
             errorMessage.textContent = message;
             errorAlert.style.display = 'block';
+            
+            // Scroll to error if needed
+            errorAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
         function hideError() {
@@ -553,15 +804,22 @@
                         // Start session timer
                         startSession();
                         
-                        // Redirect based on number of children
-                        if (result.parent.students.length === 1) {
-                            // Single child - go directly to wallet
-                            sessionStorage.setItem('currentStudent', JSON.stringify(result.parent.students[0]));
-                            window.location.href = 'wallet.html';
-                        } else {
-                            // Multiple children - go to selection dashboard
-                            window.location.href = 'dashboard.html';
-                        }
+                        // Success animation before redirect
+                        const loginBtn = document.getElementById('loginBtn');
+                        loginBtn.style.background = 'linear-gradient(135deg, #10b981, #34d399)';
+                        loginBtn.innerHTML = '<i class="fas fa-check me-2"></i>Login Successful!';
+                        
+                        setTimeout(() => {
+                            // Redirect based on number of children
+                            if (result.parent.students.length === 1) {
+                                // Single child - go directly to wallet
+                                sessionStorage.setItem('currentStudent', JSON.stringify(result.parent.students[0]));
+                                window.location.href = 'wallet.html';
+                            } else {
+                                // Multiple children - go to selection dashboard
+                                window.location.href = 'dashboard.html';
+                            }
+                        }, 1000);
                     } else {
                         showError(result.message);
                     }
@@ -580,35 +838,62 @@
             });
         }
 
+        // Add some interactive effects
+        function addInteractiveEffects() {
+            // Add parallax effect to floating shapes on mouse move
+            document.addEventListener('mousemove', (e) => {
+                const shapes = document.querySelectorAll('.floating-shape');
+                const mouseX = e.clientX / window.innerWidth;
+                const mouseY = e.clientY / window.innerHeight;
+                
+                shapes.forEach((shape, index) => {
+                    const speed = (index + 1) * 0.5;
+                    const x = (mouseX - 0.5) * speed * 20;
+                    const y = (mouseY - 0.5) * speed * 20;
+                    
+                    shape.style.transform = `translate(${x}px, ${y}px)`;
+                });
+            });
+
+            // Add input focus effects
+            const inputs = document.querySelectorAll('.form-control');
+            inputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    input.parentElement.style.transform = 'translateY(-2px)';
+                });
+                
+                input.addEventListener('blur', () => {
+                    input.parentElement.style.transform = '';
+                });
+            });
+        }
+
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
             populateDemoAccounts();
             trackActivity();
+            addInteractiveEffects();
             
             // Handle form submission
             document.getElementById('loginForm').addEventListener('submit', handleLogin);
             
-            // Auto-focus on Parent ID input
-            document.getElementById('parentId').focus();
+            // Auto-focus on Parent ID input with delay for animation
+            setTimeout(() => {
+                document.getElementById('parentId').focus();
+            }, 800);
             
             // Hide error on input
             document.getElementById('parentId').addEventListener('input', hideError);
             document.getElementById('password').addEventListener('input', hideError);
+
+            // Add keyboard shortcut for demo account
+            document.addEventListener('keydown', (e) => {
+                if (e.ctrlKey && e.key === 'Enter') {
+                    // Use first demo account for quick testing
+                    useDemoAccount(demoParents[0].parentId, demoParents[0].password);
+                }
+            });
         });
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
