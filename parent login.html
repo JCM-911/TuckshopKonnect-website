@@ -167,43 +167,45 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // For demonstration, we'll use hardcoded credentials for a parent.
-            // In a real app, this would involve a server call.
-            const dummyParent = {
-                email: 'parent@tuckshop.com',
-                password: 'password',
-                name: 'Jane Doe',
-                role: 'parent'
-            };
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
 
-            // Store this dummy parent in local storage to simulate a user database
-            if (!localStorage.getItem('parentUser')) {
-                localStorage.setItem('parentUser', JSON.stringify(dummyParent));
-            }
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errorAlert = document.getElementById('errorAlert');
+            const errorMessage = document.getElementById('errorMessage');
 
-            const loginForm = document.getElementById('loginForm');
-            loginForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-                
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-                const storedParent = JSON.parse(localStorage.getItem('parentUser'));
-                const errorAlert = document.getElementById('errorAlert');
-                const errorMessage = document.getElementById('errorMessage');
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Logging In...';
 
-                if (email === storedParent.email && password === storedParent.password) {
-                    // On successful login, save session info
-                    sessionStorage.setItem('parentToken', 'dummy-parent-token-' + Date.now());
-                    sessionStorage.setItem('parentUser', JSON.stringify(storedParent));
-                    
-                    // Redirect to the parent dashboard
-                    window.location.href = 'parent-dashboard.html';
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, role: 'parent' })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    if (data.role === 'parent') {
+                        sessionStorage.setItem('parentToken', data.token);
+                        sessionStorage.setItem('parentUser', JSON.stringify(data));
+                        window.location.href = 'parent-dashboard.html';
+                    } else {
+                        throw new Error('Access denied. Only parents can login here.');
+                    }
                 } else {
-                    errorMessage.textContent = 'Invalid email or password.';
-                    errorAlert.style.display = 'block';
+                    throw new Error(data.message || 'Login failed');
                 }
-            });
+            } catch (error) {
+                errorMessage.textContent = error.message;
+                errorAlert.style.display = 'block';
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i>Login';
+            }
         });
     </script>
 </body>
