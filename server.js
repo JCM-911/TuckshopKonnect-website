@@ -5,6 +5,7 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const itemRoutes = require('./routes/itemRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
+const User = require('./models/userModel');
 
 const app = express();
 const port = 3000;
@@ -17,10 +18,29 @@ const mongoURI = process.env.MONGO_URI;
 
 mongoose.connect(mongoURI).then(() => {
   console.log('MongoDB connected successfully');
+  createDefaultAdmin();
 }).catch(err => {
   console.error('MongoDB connection error:', err);
 });
 
+// Function to create a default admin
+async function createDefaultAdmin() {
+  try {
+    const adminExists = await User.findOne({ role: 'admin' });
+    if (!adminExists) {
+      const admin = new User({
+        name: 'admin',
+        email: 'admin@tuckshop.com',
+        password: 'admin',
+        role: 'admin',
+      });
+      await admin.save();
+      console.log('Default admin user created.');
+    }
+  } catch (error) {
+    console.error('Error creating default admin user:', error);
+  }
+}
 
 app.get('/', (req, res) => {
   res.send('Hello from the TuckshopKonnect backend!');
