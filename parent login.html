@@ -842,6 +842,8 @@
                         const loginBtn = document.getElementById('loginBtn');
                         loginBtn.style.background = 'linear-gradient(135deg, #10b981, #34d399)';
                         loginBtn.innerHTML = '<i class="fas fa-check me-2"></i>Login Successful!';
+                        loginBtn.style.boxShadow = '0 12px 32px rgba(16, 185, 129, 0.4)';
+                        loginBtn.style.transform = 'translateY(-2px) scale(1.02)';
                         
                         setTimeout(() => {
                             // Redirect based on number of children
