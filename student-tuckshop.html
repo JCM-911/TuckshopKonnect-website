@@ -67,10 +67,23 @@
                 <p id="studentName" style="color: rgba(255, 255, 255, 0.8); font-size: 1.2rem; margin-bottom: 0;">Loading...</p>
             </div>
 
+            <!-- Search and Filter Bar -->
+            <div class="filter-bar fade-in">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search for items...">
+                <button class="btn btn-primary" onclick="applySearch()">Search</button>
+            </div>
+
             <!-- Products Grid -->
             <div class="products-grid fade-in" id="productsGrid">
                 <!-- Products will be populated here -->
             </div>
+
+            <!-- Pagination Controls -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center" id="paginationControls">
+                    <!-- Pagination will be populated here -->
+                </ul>
+            </nav>
         </div>
     </main>
 
@@ -91,7 +104,8 @@
     <script>
         let currentUser = null;
         let products = [];
-        let cart = [];
+        let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+        let currentPage = 1;
 
         document.addEventListener('DOMContentLoaded', function() {
             const token = sessionStorage.getItem('authToken');
@@ -109,6 +123,7 @@
             
             setupUI();
             fetchProducts();
+            updateCartUI();
         });
 
         function setupUI() {
@@ -123,21 +138,29 @@
             sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
         }
 
-        async function fetchProducts() {
+        async function fetchProducts(page = 1, search = '') {
             const token = sessionStorage.getItem('authToken');
+            currentPage = page;
             try {
-                const response = await fetch('/api/items', {
+                const response = await fetch(`/api/items?page=${page}&limit=10&search=${search}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
                 });
                 if (!response.ok) throw new Error('Failed to fetch products');
-                products = await response.json();
+                const data = await response.json();
+                products = data.items;
                 renderProducts();
+                renderPagination(data.totalPages);
             } catch (error) {
                 console.error('Error fetching products:', error);
                 document.getElementById('productsGrid').innerHTML = '<p class="text-white">Could not load products. Please try again later.</p>';
             }
+        }
+
+        function applySearch() {
+            const searchTerm = document.getElementById('searchInput').value;
+            fetchProducts(1, searchTerm);
         }
 
         function renderProducts() {
@@ -164,6 +187,18 @@
             });
         }
 
+        function renderPagination(totalPages) {
+            const paginationControls = document.getElementById('paginationControls');
+            paginationControls.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const li = document.createElement('li');
+                li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                li.innerHTML = `<a class="page-link" href="#" onclick="fetchProducts(${i})">${i}</a>`;
+                paginationControls.appendChild(li);
+            }
+        }
+
         function addToCart(productId) {
             const product = products.find(p => p._id === productId);
             if (!product) return;
@@ -178,6 +213,7 @@
         }
 
         function updateCartUI() {
+            sessionStorage.setItem('cart', JSON.stringify(cart));
             const cartCount = document.getElementById('cartCount');
             const cartBody = document.getElementById('cartBody');
             const cartFooter = document.getElementById('cartFooter');
@@ -215,6 +251,7 @@
         async function processCheckout() {
             const token = sessionStorage.getItem('authToken');
             const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const cartItems = cart.map(item => ({ item: item._id, quantity: item.quantity, price: item.price }));
 
             try {
                 const response = await fetch('/api/transactions', {
@@ -227,8 +264,8 @@
                         amount: totalPrice,
                         type: 'purchase',
                         description: 'Tuckshop Purchase',
-                        status: 'completed',
-                        userId: currentUser._id
+                        userId: currentUser._id,
+                        items: cartItems
                     })
                 });
 
@@ -237,9 +274,7 @@
                     throw new Error(errorData.message || 'Checkout failed');
                 }
 
-                const transaction = await response.json();
-
-                updateBalance(currentUser.balance - totalPrice);
+                await fetchAndUpdateBalance();
                 alert('Purchase successful!');
                 cart = [];
                 updateCartUI();
@@ -247,6 +282,20 @@
             } catch (error) {
                 console.error('Checkout error:', error);
                 alert(`Error: ${error.message}`);
+            }
+        }
+
+        async function fetchAndUpdateBalance() {
+            const token = sessionStorage.getItem('authToken');
+            try {
+                const response = await fetch('/api/users/profile', { // Assuming this endpoint exists
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!response.ok) return;
+                const updatedUser = await response.json();
+                updateBalance(updatedUser.balance);
+            } catch (error) {
+                console.error('Error fetching updated balance:', error);
             }
         }
         
@@ -259,7 +308,8 @@
                     }
                 });
                 if (!response.ok) throw new Error('Failed to fetch history');
-                const transactions = await response.json();
+                const data = await response.json();
+                const transactions = data.transactions;
                 
                 // For simplicity, using alert to show history. A modal is better.
                 let history = 'Transaction History:\n\n';

@@ -1,67 +1,116 @@
 const Transaction = require('../models/transactionModel');
 const User = require('../models/userModel');
+const mongoose = require('mongoose');
 
-// @desc    Create a new transaction
-// @route   POST /api/transactions
-// @access  Private
+// Create a new transaction with atomicity and validation
 const createTransaction = async (req, res) => {
-  const { amount, type, description, status, userId } = req.body;
+  const { amount, type, description, userId, items } = req.body;
+
+  // Validate input
+  if (!amount || !type || !userId || (type === 'purchase' && !items)) {
+    return res.status(400).json({ message: 'Missing required fields for transaction.' });
+  }
+  if (amount <= 0) {
+    return res.status(400).json({ message: 'Transaction amount must be positive.' });
+  }
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
   try {
-    // Find the user to associate with the transaction
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).session(session);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      throw new Error('User not found');
     }
 
-    const transaction = new Transaction({
-      user: user._id,
-      amount,
-      type,
-      description,
-      status,
-    });
-
-    // If it's a deposit or purchase, update the user's balance
-    if (type === 'deposit') {
+    // Handle balance changes based on transaction type
+    if (type === 'deposit' || type === 'refund') {
       user.balance += amount;
     } else if (type === 'purchase') {
       if (user.balance < amount) {
-        return res.status(400).json({ message: 'Insufficient funds' });
+        return res.status(400).json({ message: 'Insufficient funds for this purchase.' });
       }
       user.balance -= amount;
     }
 
-    await user.save();
-    const createdTransaction = await transaction.save();
+    await user.save({ session });
 
-    res.status(201).json(createdTransaction);
+    const transaction = new Transaction({
+      user: userId,
+      amount,
+      type,
+      description,
+      items: type === 'purchase' ? items : [],
+      status: 'completed',
+    });
+
+    await transaction.save({ session });
+
+    await session.commitTransaction();
+    res.status(201).json({ transaction, message: 'Transaction created successfully.' });
+
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    await session.abortTransaction();
+    console.error('Create Transaction Error:', error);
+    res.status(500).json({ message: `Transaction failed: ${error.message}` });
+  } finally {
+    session.endSession();
   }
 };
 
-// @desc    Get all transactions for a user
-// @route   GET /api/transactions
-// @access  Private
+// Get transactions for the currently logged-in user with pagination
 const getUserTransactions = async (req, res) => {
-  try {
-    const transactions = await Transaction.find({ user: req.user._id });
-    res.json(transactions);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+    const { page = 1, limit = 10, type } = req.query;
+    const filter = { user: req.user._id };
+    if (type) filter.type = type;
+
+    try {
+        const transactions = await Transaction.find(filter)
+            .sort({ createdAt: -1 })
+            .limit(limit * 1)
+            .skip((page - 1) * limit)
+            .populate('items.item', 'name price');
+
+        const count = await Transaction.countDocuments(filter);
+
+        res.json({
+            transactions,
+            totalPages: Math.ceil(count / limit),
+            currentPage: page,
+        });
+    } catch (error) {
+        console.error('Get User Transactions Error:', error);
+        res.status(500).json({ message: 'Error fetching user transactions.' });
+    }
 };
 
-// @desc    Get all transactions (admin only)
-// @route   GET /api/transactions/all
-// @access  Private/Admin
+
+// Get all transactions for all users (admin only) with advanced filtering
 const getAllTransactions = async (req, res) => {
+  const { page = 1, limit = 10, userId, type, status } = req.query;
+  const filter = {};
+
+  if (userId) filter.user = userId;
+  if (type) filter.type = type;
+  if (status) filter.status = status;
+
   try {
-    const transactions = await Transaction.find({}).populate('user', 'id name');
-    res.json(transactions);
+    const transactions = await Transaction.find(filter)
+      .populate('user', 'name email studentId') // Populate user details
+      .sort({ createdAt: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
+      
+    const count = await Transaction.countDocuments(filter);
+
+    res.json({
+      transactions,
+      totalPages: Math.ceil(count / limit),
+      currentPage: page,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Get All Transactions Error:', error);
+    res.status(500).json({ message: 'Server error while fetching all transactions.' });
   }
 };
 

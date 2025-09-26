@@ -2,20 +2,44 @@ const User = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
+// Enhanced user registration with validation and security
 const registerUser = async (req, res) => {
-  const { name, email, password, role, studentId, class: studentClass } = req.body;
+  const {
+    name,
+    email,
+    password,
+    role,
+    studentId,
+    class: studentClass
+  } = req.body;
+
+  // Basic validation
+  if (!name || !email || !password || !role) {
+    return res.status(400).json({
+      message: 'Please provide name, email, password, and role'
+    });
+  }
 
   try {
-    const userExists = await User.findOne({ email });
-
+    // Check if user exists by email or studentId
+    const userExists = await User.findOne({
+      $or: [{
+        email
+      }, {
+        studentId
+      }]
+    });
     if (userExists) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({
+        message: 'User with this email or student ID already exists'
+      });
     }
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
+    // Securely hash the password
+    const salt = await bcrypt.genSalt(12);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // Create a new user
     const user = await User.create({
       name,
       email,
@@ -26,6 +50,7 @@ const registerUser = async (req, res) => {
     });
 
     if (user) {
+      // Return a clean user object with a JWT token
       res.status(201).json({
         _id: user._id,
         name: user.name,
@@ -35,32 +60,55 @@ const registerUser = async (req, res) => {
         token: generateToken(user._id),
       });
     } else {
-      res.status(400).json({ message: 'Invalid user data' });
+      res.status(400).json({
+        message: 'Invalid user data provided'
+      });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Registration Error:', error);
+    res.status(500).json({
+      message: 'Server error during registration'
+    });
   }
 };
 
+// Secure and role-based login
 const loginUser = async (req, res) => {
-  const { studentId, email, password } = req.body;
+  const {
+    studentId, 
+    email, 
+    password, 
+    role
+  } = req.body;
 
-  if ((!studentId && !email) || !password) {
-    return res.status(400).json({ message: 'Please provide login credentials and password' });
+  // Validate required fields based on role
+  if (!password || !role) {
+    return res.status(400).json({
+      message: 'Role and password are required'
+    });
+  }
+
+  if ((role === 'student' && !studentId) || (role === 'parent' && !email) || (role === 'admin' && !email)) {
+    return res.status(400).json({
+      message: 'Please provide the correct identifier for your role (Student ID or Email)'
+    });
   }
 
   try {
     let user;
-
-    if (studentId) {
-      // Find user by studentId, case-insensitive for convenience
-      user = await User.findOne({ studentId: { $regex: new RegExp(`^${studentId}$`, 'i') } });
+    // Find user based on role
+    if (role === 'student') {
+      user = await User.findOne({
+        studentId
+      });
     } else {
-      // Find user by email, case-insensitive
-      user = await User.findOne({ email: { $regex: new RegExp(`^${email}$`, 'i') } });
+      user = await User.findOne({
+        email
+      });
     }
 
-    if (user && (await bcrypt.compare(password, user.password))) {
+    // Verify user and password, and check role alignment
+    if (user && user.role === role && (await bcrypt.compare(password, user.password))) {
       res.json({
         _id: user._id,
         name: user.name,
@@ -68,21 +116,30 @@ const loginUser = async (req, res) => {
         role: user.role,
         studentId: user.studentId,
         balance: user.balance,
-        token: generateToken(user._id),
+        token: generateToken(user._id, user.role),
       });
     } else {
-      res.status(401).json({ message: 'Invalid credentials' });
+      // Generic message to prevent user enumeration
+      res.status(401).json({
+        message: 'Invalid credentials or role mismatch'
+      });
     }
   } catch (error) {
     console.error('Login Error:', error);
-    res.status(500).json({ message: 'Server error during login.' });
+    res.status(500).json({
+      message: 'Server error during login'
+    });
   }
 };
 
-const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: '30d',
+// Generate a JWT with user ID and role
+const generateToken = (id, role) => {
+  return jwt.sign({ id, role }, process.env.JWT_SECRET, {
+    expiresIn: role === 'admin' ? '8h' : '24h', // Shorter session for admin
   });
 };
 
-module.exports = { registerUser, loginUser };
+module.exports = {
+  registerUser,
+  loginUser
+};
