@@ -27,12 +27,14 @@ mongoose.connect(mongoURI).then(() => {
 // Function to create a default admin
 async function createDefaultAdmin() {
   try {
-    const adminExists = await User.findOne({ role: 'admin' });
+    const adminExists = await User.findOne({ email: 'admin' });
     if (!adminExists) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash('admin', salt);
       const admin = new User({
         name: 'admin',
         email: 'admin',
-        password: 'admin',
+        password: hashedPassword,
         role: 'admin',
       });
       await admin.save();
