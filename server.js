@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const cors = require('cors'); // Import cors
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const itemRoutes = require('./routes/itemRoutes');
@@ -9,9 +10,10 @@ const transactionRoutes = require('./routes/transactionRoutes');
 const User = require('./models/userModel');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; // Use environment port or 3000
 
 // Middleware
+app.use(cors()); // Enable CORS for all routes
 app.use(express.json());
 
 // MongoDB Connection
@@ -62,5 +64,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`);
+  console.log(`Server listening on port ${port}`);
 });
